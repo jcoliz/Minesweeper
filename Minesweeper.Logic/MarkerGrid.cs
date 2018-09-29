@@ -8,19 +8,14 @@ namespace Minesweeper.Logic
     {
         public enum PlayResult { Invalid = 0, Continue, GameOver, Victory };
 
-        private int NumCols;
-
-        private int NumRows;
-
-        private int NumBombs;
-
         /// <summary>
         /// Consntruct a new marker grid
         /// </summary>
         /// <param name="numcols">How many columns</param>
         /// <param name="numrows">How many rows, or leave out for 'same as numcols'</param>
         /// <param name="numbombs">How many bombs, or leave out for 'same as numcols'</param>
-        public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null)
+        /// <param name="backingstore">Optional backing storage, useful for tests to inspect internal state</param>
+        public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null, List<List<Marker>> backingstore = null)
         {
         }
 
