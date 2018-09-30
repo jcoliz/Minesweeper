@@ -20,7 +20,7 @@ namespace Minesweeper.Logic
         /// Protected so that test code can subclass and inspect.
         /// Outer list items are rows, inner list items are cols
         /// </remarks>
-        protected List<List<Marker>> MarkerStore;
+        protected List<List<Marker>> Markers;
 
         /// <summary>
         /// Consntruct a new marker grid
@@ -36,7 +36,7 @@ namespace Minesweeper.Logic
             if (numrows.HasValue)
                 RowSize = numrows.Value;
 
-            MarkerStore = new List<List<Marker>>();
+            Markers = new List<List<Marker>>();
 
             for (int row = 0; row < RowSize; ++row)
             {
@@ -45,7 +45,7 @@ namespace Minesweeper.Logic
                 {
                     newrow.Add(new Marker());
                 }
-                MarkerStore.Add(newrow);
+                Markers.Add(newrow);
             }
 
             int bombs = numcols;
@@ -62,10 +62,10 @@ namespace Minesweeper.Logic
                     atrow = RandomGenerator.Next(RowSize);
                     atcol = RandomGenerator.Next(ColSize);
                 }
-                while (MarkerStore[atrow][atcol].isBomb);
+                while (Markers[atrow][atcol].isBomb);
 
                 // Place the bomb
-                MarkerStore[atrow][atcol].isBomb = true;
+                Markers[atrow][atcol].isBomb = true;
             }
         }
 
@@ -77,7 +77,7 @@ namespace Minesweeper.Logic
         {
             List<string> result = new List<string>();
 
-            foreach(var row in MarkerStore)
+            foreach(var row in Markers)
             {
                 string line = string.Empty;
 
@@ -104,7 +104,7 @@ namespace Minesweeper.Logic
                 result = PlayResult.Invalid;
             else
             {
-                var marker = MarkerStore[row][col];
+                var marker = Markers[row][col];
 
                 if (marker.isShowing)
                     result = PlayResult.Invalid;
@@ -132,7 +132,7 @@ namespace Minesweeper.Logic
         {
             bool victory = true;
 
-            foreach (var row in MarkerStore)
+            foreach (var row in Markers)
             {
                 foreach (var marker in row)
                 {
@@ -159,7 +159,7 @@ namespace Minesweeper.Logic
 
                     if (lookrow >= 0 && lookrow < RowSize && lookcol >= 0 && lookcol < ColSize)
                     {
-                        if (MarkerStore[lookrow][lookcol].isBomb)
+                        if (Markers[lookrow][lookcol].isBomb)
                         {
                             ++foundbombs;
                         }
