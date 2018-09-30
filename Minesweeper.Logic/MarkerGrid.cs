@@ -8,6 +8,8 @@ namespace Minesweeper.Logic
     {
         public enum PlayResult { Invalid = 0, Continue, GameOver, Victory };
 
+        private Random RandomGenerator = new Random(DateTime.Now.Millisecond);
+
         /// <summary>
         /// Internal storage of markers
         /// </summary>
@@ -41,6 +43,25 @@ namespace Minesweeper.Logic
                 }
             }
 
+            int bombs = numcols;
+            if (numbombs.HasValue)
+                bombs = numbombs.Value;
+
+            while(bombs-- > 0)
+            {
+                // Make sure there is not already a bomb here.
+                int atrow;
+                int atcol;
+                do
+                {
+                    atrow = RandomGenerator.Next(rowsize);
+                    atcol = RandomGenerator.Next(colsize);
+                }
+                while (MarkerStore[atrow, atcol].isBomb);
+
+                // Place the bomb
+                MarkerStore[atrow, atcol].isBomb = true;
+            }
         }
 
         /// <summary>

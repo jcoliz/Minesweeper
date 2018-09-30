@@ -16,7 +16,7 @@ namespace Minesweeper.Tests
         public void ConstructSquare()
         {
             var size = 3;
-            var grid = new MarkerGridInspectable(size);
+            var grid = new MarkerGridInspectable(size,null,0);
 
             Assert.AreEqual(size, grid.MarkerStoreInspectable.GetLength(0));
             Assert.AreEqual(size, grid.MarkerStoreInspectable.GetLength(1));
@@ -27,7 +27,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols,size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             Assert.AreEqual(size_rows, grid.MarkerStoreInspectable.GetLength(0));
             Assert.AreEqual(size_cols, grid.MarkerStoreInspectable.GetLength(1));
@@ -37,7 +37,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             var rendered = grid.Render();
 
@@ -55,7 +55,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             grid.PlayAt(1, 1);
 
@@ -69,7 +69,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant a bomb!!
             grid.MarkerStoreInspectable[1, 1].isBomb = true;
@@ -87,7 +87,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant a bomb!!
             grid.MarkerStoreInspectable[1, 1].isBomb = true;
@@ -105,7 +105,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant 8 bombs
             grid.MarkerStoreInspectable[0, 0].isBomb = true;
@@ -130,7 +130,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             grid.PlayAt(1, 1);
             var result = grid.PlayAt(1, 1);
@@ -142,7 +142,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             var result = grid.PlayAt(20, 20);
 
@@ -153,7 +153,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows);
+            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant 8 bombs
             grid.MarkerStoreInspectable[0, 0].isBomb = true;
@@ -181,5 +181,26 @@ namespace Minesweeper.Tests
 
             Assert.AreEqual(MarkerGrid.PlayResult.Victory, result);
         }
+        [TestMethod]
+        public void ConstructRectangularWithBombs()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var num_bombs = size_cols * size_rows / 2;
+            var grid = new MarkerGridInspectable(size_cols, size_rows, num_bombs);
+
+            var actual_bombs = 0;
+            for (int row = 0; row < size_rows; ++row)
+            {
+                for (int col = 0; col < size_cols; ++col)
+                {
+                    if (grid.MarkerStoreInspectable[row, col].isBomb)
+                        ++actual_bombs;
+                }
+            }
+
+            Assert.AreEqual(num_bombs, actual_bombs);
+        }
+
     }
 }
