@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Minesweeper.Logic
+﻿namespace Minesweeper.Logic
 {
     /// <summary>
     /// A single position on a minesweeper game board
