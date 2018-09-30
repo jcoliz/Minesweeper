@@ -32,7 +32,7 @@ namespace Minesweeper.Logic
         {
             ColSize = numcols;
 
-            int RowSize = numcols;
+            RowSize = numcols;
             if (numrows.HasValue)
                 RowSize = numrows.Value;
 
@@ -132,11 +132,11 @@ namespace Minesweeper.Logic
         {
             bool victory = true;
 
-            foreach (var r in MarkerStore)
+            foreach (var row in MarkerStore)
             {
-                foreach (var m in r)
+                foreach (var marker in row)
                 {
-                    if (! m.isBomb && ! m.isShowing)
+                    if (! marker.isBomb && ! marker.isShowing)
                     {
                         victory = false;
                     }
