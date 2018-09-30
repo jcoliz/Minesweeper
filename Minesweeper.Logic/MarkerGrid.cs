@@ -1,17 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Minesweeper.Logic
 {
+    public class GameBoard
+    {
+        public Size Dimensions { get; }
+        public List<List<Marker>> Markers { get; }
+
+        public GameBoard(Size desireddimensions)
+        {
+            Dimensions = desireddimensions;
+
+            Markers = new List<List<Marker>>();
+
+            for (int row = 0; row < Dimensions.Height; ++row)
+            {
+                var newrow = new List<Marker>();
+                for (int col = 0; col < Dimensions.Width; ++col)
+                {
+                    newrow.Add(new Marker());
+                }
+                Markers.Add(newrow);
+            }
+        }
+    }
+
     public class MarkerGrid
     {
         public enum PlayResult { Invalid = 0, Continue, GameOver, Victory };
 
         private Random RandomGenerator = new Random(DateTime.Now.Millisecond);
-
-        private int RowSize;
-        private int ColSize;
 
         /// <summary>
         /// Internal storage of markers
@@ -20,7 +41,7 @@ namespace Minesweeper.Logic
         /// Protected so that test code can subclass and inspect.
         /// Outer list items are rows, inner list items are cols
         /// </remarks>
-        protected List<List<Marker>> Markers;
+        protected GameBoard Board;
 
         /// <summary>
         /// Consntruct a new marker grid
@@ -30,23 +51,13 @@ namespace Minesweeper.Logic
         /// <param name="numbombs">How many bombs, or leave out for 'same as numcols'</param>
         public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null)
         {
-            ColSize = numcols;
+            var ColSize = numcols;
 
-            RowSize = numcols;
+            var RowSize = numcols;
             if (numrows.HasValue)
                 RowSize = numrows.Value;
 
-            Markers = new List<List<Marker>>();
-
-            for (int row = 0; row < RowSize; ++row)
-            {
-                var newrow = new List<Marker>();
-                for (int col = 0; col < ColSize; ++col)
-                {
-                    newrow.Add(new Marker());
-                }
-                Markers.Add(newrow);
-            }
+            Board = new GameBoard(new Size(ColSize, RowSize));
 
             int bombs = numcols;
             if (numbombs.HasValue)
@@ -62,10 +73,10 @@ namespace Minesweeper.Logic
                     atrow = RandomGenerator.Next(RowSize);
                     atcol = RandomGenerator.Next(ColSize);
                 }
-                while (Markers[atrow][atcol].isBomb);
+                while (Board.Markers[atrow][atcol].isBomb);
 
                 // Place the bomb
-                Markers[atrow][atcol].isBomb = true;
+                Board.Markers[atrow][atcol].isBomb = true;
             }
         }
 
@@ -77,7 +88,7 @@ namespace Minesweeper.Logic
         {
             List<string> result = new List<string>();
 
-            foreach(var row in Markers)
+            foreach(var row in Board.Markers)
             {
                 string line = string.Empty;
 
@@ -100,11 +111,11 @@ namespace Minesweeper.Logic
         {
             PlayResult result = PlayResult.Continue;
 
-            if (row < 0 || row >= RowSize || col < 0 || col >= ColSize)
+            if (row < 0 || row >= Board.Dimensions.Height || col < 0 || col >= Board.Dimensions.Width)
                 result = PlayResult.Invalid;
             else
             {
-                var marker = Markers[row][col];
+                var marker = Board.Markers[row][col];
 
                 if (marker.isShowing)
                     result = PlayResult.Invalid;
@@ -132,7 +143,7 @@ namespace Minesweeper.Logic
         {
             bool victory = true;
 
-            foreach (var row in Markers)
+            foreach (var row in Board.Markers)
             {
                 foreach (var marker in row)
                 {
@@ -157,9 +168,9 @@ namespace Minesweeper.Logic
                     int lookrow = row + rowdelta;
                     int lookcol = col + coldelta;
 
-                    if (lookrow >= 0 && lookrow < RowSize && lookcol >= 0 && lookcol < ColSize)
+                    if (lookrow >= 0 && lookrow < Board.Dimensions.Height && lookcol >= 0 && lookcol < Board.Dimensions.Width)
                     {
-                        if (Markers[lookrow][lookcol].isBomb)
+                        if (Board.Markers[lookrow][lookcol].isBomb)
                         {
                             ++foundbombs;
                         }
