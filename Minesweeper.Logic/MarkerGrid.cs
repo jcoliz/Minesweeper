@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Minesweeper.Logic
 {
-    public class GameBoard
+    public class Board
     {
         public Size Dimensions { get; }
         public List<List<Marker>> Markers { get; }
 
-        public GameBoard(Size desireddimensions)
+        public Board(Size desireddimensions)
         {
             Dimensions = desireddimensions;
 
@@ -28,7 +28,7 @@ namespace Minesweeper.Logic
         }
     }
 
-    public class MarkerGrid
+    public class Game
     {
         public enum PlayResult { Invalid = 0, Continue, GameOver, Victory };
 
@@ -41,7 +41,7 @@ namespace Minesweeper.Logic
         /// Protected so that test code can subclass and inspect.
         /// Outer list items are rows, inner list items are cols
         /// </remarks>
-        protected GameBoard Board;
+        protected Board GameBoard;
 
         /// <summary>
         /// Consntruct a new marker grid
@@ -49,7 +49,7 @@ namespace Minesweeper.Logic
         /// <param name="numcols">How many columns</param>
         /// <param name="numrows">How many rows, or leave out for 'same as numcols'</param>
         /// <param name="numbombs">How many bombs, or leave out for 'same as numcols'</param>
-        public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null)
+        public Game(int numcols, int? numrows = null, int? numbombs = null)
         {
             var ColSize = numcols;
 
@@ -57,7 +57,7 @@ namespace Minesweeper.Logic
             if (numrows.HasValue)
                 RowSize = numrows.Value;
 
-            Board = new GameBoard(new Size(ColSize, RowSize));
+            GameBoard = new Board(new Size(ColSize, RowSize));
 
             int bombs = numcols;
             if (numbombs.HasValue)
@@ -73,10 +73,10 @@ namespace Minesweeper.Logic
                     atrow = RandomGenerator.Next(RowSize);
                     atcol = RandomGenerator.Next(ColSize);
                 }
-                while (Board.Markers[atrow][atcol].isBomb);
+                while (GameBoard.Markers[atrow][atcol].isBomb);
 
                 // Place the bomb
-                Board.Markers[atrow][atcol].isBomb = true;
+                GameBoard.Markers[atrow][atcol].isBomb = true;
             }
         }
 
@@ -88,7 +88,7 @@ namespace Minesweeper.Logic
         {
             List<string> result = new List<string>();
 
-            foreach(var row in Board.Markers)
+            foreach(var row in GameBoard.Markers)
             {
                 string line = string.Empty;
 
@@ -111,11 +111,11 @@ namespace Minesweeper.Logic
         {
             PlayResult result = PlayResult.Continue;
 
-            if (row < 0 || row >= Board.Dimensions.Height || col < 0 || col >= Board.Dimensions.Width)
+            if (row < 0 || row >= GameBoard.Dimensions.Height || col < 0 || col >= GameBoard.Dimensions.Width)
                 result = PlayResult.Invalid;
             else
             {
-                var marker = Board.Markers[row][col];
+                var marker = GameBoard.Markers[row][col];
 
                 if (marker.isShowing)
                     result = PlayResult.Invalid;
@@ -143,7 +143,7 @@ namespace Minesweeper.Logic
         {
             bool victory = true;
 
-            foreach (var row in Board.Markers)
+            foreach (var row in GameBoard.Markers)
             {
                 foreach (var marker in row)
                 {
@@ -168,9 +168,9 @@ namespace Minesweeper.Logic
                     int lookrow = row + rowdelta;
                     int lookcol = col + coldelta;
 
-                    if (lookrow >= 0 && lookrow < Board.Dimensions.Height && lookcol >= 0 && lookcol < Board.Dimensions.Width)
+                    if (lookrow >= 0 && lookrow < GameBoard.Dimensions.Height && lookcol >= 0 && lookcol < GameBoard.Dimensions.Width)
                     {
-                        if (Board.Markers[lookrow][lookcol].isBomb)
+                        if (GameBoard.Markers[lookrow][lookcol].isBomb)
                         {
                             ++foundbombs;
                         }

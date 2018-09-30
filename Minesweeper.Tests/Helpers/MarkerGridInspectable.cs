@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Minesweeper.Tests.Helpers
 {
-    public class MarkerGridInspectable: MarkerGrid
+    public class MarkerGridInspectable: Game
     {
         /// <summary>
         /// Inspectable storage of markers
@@ -13,7 +13,7 @@ namespace Minesweeper.Tests.Helpers
         /// <remarks>
         /// Exposed so that test code can subclass and inspect
         /// </remarks>
-        public List<List<Marker>> Markers => base.Board.Markers;
+        public List<List<Marker>> Markers => base.GameBoard.Markers;
 
         /// <summary>
         /// Consntruct a new marker grid

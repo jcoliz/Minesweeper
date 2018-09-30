@@ -6,14 +6,14 @@ namespace Minesweeper
 {
     class Program
     {
-        static MarkerGrid Playfield;
+        static Game Playfield;
         const int Size = 9;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Minesweeper!");
 
-            Playfield = new MarkerGrid(Size);
+            Playfield = new Game(Size);
 
             bool done = false;
             while(!done)
@@ -38,7 +38,7 @@ namespace Minesweeper
 
                     Console.WriteLine(result.ToString());
 
-                    if (result == MarkerGrid.PlayResult.GameOver || result == MarkerGrid.PlayResult.Victory)
+                    if (result == Game.PlayResult.GameOver || result == Game.PlayResult.Victory)
                         done = true;
                 }
                 catch (Exception ex)

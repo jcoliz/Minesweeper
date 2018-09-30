@@ -79,7 +79,7 @@ namespace Minesweeper.Tests
             var rendered = grid.Render();
 
             Assert.AreEqual("#@#", rendered[1]);
-            Assert.AreEqual(MarkerGrid.PlayResult.GameOver, result);
+            Assert.AreEqual(Game.PlayResult.GameOver, result);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace Minesweeper.Tests
             var rendered = grid.Render();
 
             Assert.AreEqual("##1", rendered[1]);
-            Assert.AreEqual(MarkerGrid.PlayResult.Continue, result);
+            Assert.AreEqual(Game.PlayResult.Continue, result);
         }
 
         [TestMethod]
@@ -122,7 +122,7 @@ namespace Minesweeper.Tests
             var rendered = grid.Render();
 
             Assert.AreEqual("#8#", rendered[1]);
-            Assert.AreEqual(MarkerGrid.PlayResult.Continue, result);
+            Assert.AreEqual(Game.PlayResult.Continue, result);
         }
 
         [TestMethod]
@@ -135,7 +135,7 @@ namespace Minesweeper.Tests
             grid.PlayAt(1, 1);
             var result = grid.PlayAt(1, 1);
 
-            Assert.AreEqual(MarkerGrid.PlayResult.Invalid, result);
+            Assert.AreEqual(Game.PlayResult.Invalid, result);
         }
         [TestMethod]
         public void CantPlayOffGrid()
@@ -146,7 +146,7 @@ namespace Minesweeper.Tests
 
             var result = grid.PlayAt(20, 20);
 
-            Assert.AreEqual(MarkerGrid.PlayResult.Invalid, result);
+            Assert.AreEqual(Game.PlayResult.Invalid, result);
         }
         [TestMethod]
         public void Win()
@@ -172,14 +172,14 @@ namespace Minesweeper.Tests
                 for (int col = 0; col < size_cols; ++col)
                 {
                     var playresult = grid.PlayAt(col, row);
-                    Assert.AreEqual(MarkerGrid.PlayResult.Continue, playresult);
+                    Assert.AreEqual(Game.PlayResult.Continue, playresult);
                 }
             }
 
             // Now play the final space
             var result = grid.PlayAt(1, 1);
 
-            Assert.AreEqual(MarkerGrid.PlayResult.Victory, result);
+            Assert.AreEqual(Game.PlayResult.Victory, result);
         }
         [TestMethod]
         public void ConstructRectangularWithBombs()
