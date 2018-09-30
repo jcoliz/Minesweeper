@@ -35,9 +35,9 @@ namespace Minesweeper.Logic
 
             MarkerStore = new Marker[rowsize,colsize];
 
-            for (int row = 0; row < numrows; ++row)
+            for (int row = 0; row < rowsize; ++row)
             {
-                for (int col = 0; col < numcols; ++col)
+                for (int col = 0; col < colsize; ++col)
                 {
                     MarkerStore[row, col] = new Marker();
                 }
