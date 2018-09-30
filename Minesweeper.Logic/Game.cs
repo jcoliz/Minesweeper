@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 
 namespace Minesweeper.Logic
 {
@@ -107,20 +108,9 @@ namespace Minesweeper.Logic
         #region Internal Methods
         private bool isVictoryConditionMet()
         {
-            bool victory = true;
+            // Victory is met when every square is either showing or has a bomb
 
-            foreach (var row in GameBoard.Markers)
-            {
-                foreach (var marker in row)
-                {
-                    if (! marker.isBomb && ! marker.isShowing)
-                    {
-                        victory = false;
-                    }
-                }
-            }
-
-            return victory;
+            return 0 == GameBoard.Markers.Aggregate(0, (total, row) => total + row.Where(marker => !marker.isShowing && !marker.isBomb).Count());
         }
 
         private int CountBombsNear(int row, int col)
