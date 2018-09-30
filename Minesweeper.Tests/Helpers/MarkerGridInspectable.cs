@@ -13,7 +13,7 @@ namespace Minesweeper.Tests.Helpers
         /// <remarks>
         /// Exposed so that test code can subclass and inspect
         /// </remarks>
-        public Marker[,] MarkerStoreInspectable => base.MarkerStore;
+        public List<List<Marker>> MarkerStoreInspectable => base.MarkerStore;
 
         /// <summary>
         /// Consntruct a new marker grid

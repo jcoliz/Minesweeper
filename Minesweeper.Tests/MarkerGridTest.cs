@@ -18,8 +18,8 @@ namespace Minesweeper.Tests
             var size = 3;
             var grid = new MarkerGridInspectable(size,null,0);
 
-            Assert.AreEqual(size, grid.MarkerStoreInspectable.GetLength(0));
-            Assert.AreEqual(size, grid.MarkerStoreInspectable.GetLength(1));
+            Assert.AreEqual(size, grid.MarkerStoreInspectable.Count);
+            Assert.AreEqual(size, grid.MarkerStoreInspectable[0].Count);
         }
 
         [TestMethod]
@@ -29,8 +29,8 @@ namespace Minesweeper.Tests
             var size_rows = 10;
             var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
-            Assert.AreEqual(size_rows, grid.MarkerStoreInspectable.GetLength(0));
-            Assert.AreEqual(size_cols, grid.MarkerStoreInspectable.GetLength(1));
+            Assert.AreEqual(size_rows, grid.MarkerStoreInspectable.Count);
+            Assert.AreEqual(size_cols, grid.MarkerStoreInspectable[0].Count);
         }
         [TestMethod]
         public void RenderEmpty()
@@ -72,7 +72,7 @@ namespace Minesweeper.Tests
             var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant a bomb!!
-            grid.MarkerStoreInspectable[1, 1].isBomb = true;
+            grid.MarkerStoreInspectable[1][1].isBomb = true;
 
             var result = grid.PlayAt(1, 1);
 
@@ -90,7 +90,7 @@ namespace Minesweeper.Tests
             var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant a bomb!!
-            grid.MarkerStoreInspectable[1, 1].isBomb = true;
+            grid.MarkerStoreInspectable[1][1].isBomb = true;
 
             var result = grid.PlayAt(2, 1);
 
@@ -108,14 +108,14 @@ namespace Minesweeper.Tests
             var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant 8 bombs
-            grid.MarkerStoreInspectable[0, 0].isBomb = true;
-            grid.MarkerStoreInspectable[0, 1].isBomb = true;
-            grid.MarkerStoreInspectable[0, 2].isBomb = true;
-            grid.MarkerStoreInspectable[1, 0].isBomb = true;
-            grid.MarkerStoreInspectable[1, 2].isBomb = true;
-            grid.MarkerStoreInspectable[2, 0].isBomb = true;
-            grid.MarkerStoreInspectable[2, 1].isBomb = true;
-            grid.MarkerStoreInspectable[2, 2].isBomb = true;
+            grid.MarkerStoreInspectable[0][0].isBomb = true;
+            grid.MarkerStoreInspectable[0][1].isBomb = true;
+            grid.MarkerStoreInspectable[0][2].isBomb = true;
+            grid.MarkerStoreInspectable[1][0].isBomb = true;
+            grid.MarkerStoreInspectable[1][2].isBomb = true;
+            grid.MarkerStoreInspectable[2][0].isBomb = true;
+            grid.MarkerStoreInspectable[2][1].isBomb = true;
+            grid.MarkerStoreInspectable[2][2].isBomb = true;
 
             var result = grid.PlayAt(1, 1);
 
@@ -156,14 +156,14 @@ namespace Minesweeper.Tests
             var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
 
             // Plant 8 bombs
-            grid.MarkerStoreInspectable[0, 0].isBomb = true;
-            grid.MarkerStoreInspectable[0, 1].isBomb = true;
-            grid.MarkerStoreInspectable[0, 2].isBomb = true;
-            grid.MarkerStoreInspectable[1, 0].isBomb = true;
-            grid.MarkerStoreInspectable[1, 2].isBomb = true;
-            grid.MarkerStoreInspectable[2, 0].isBomb = true;
-            grid.MarkerStoreInspectable[2, 1].isBomb = true;
-            grid.MarkerStoreInspectable[2, 2].isBomb = true;
+            grid.MarkerStoreInspectable[0][0].isBomb = true;
+            grid.MarkerStoreInspectable[0][1].isBomb = true;
+            grid.MarkerStoreInspectable[0][2].isBomb = true;
+            grid.MarkerStoreInspectable[1][0].isBomb = true;
+            grid.MarkerStoreInspectable[1][2].isBomb = true;
+            grid.MarkerStoreInspectable[2][0].isBomb = true;
+            grid.MarkerStoreInspectable[2][1].isBomb = true;
+            grid.MarkerStoreInspectable[2][2].isBomb = true;
 
             // Play all the other places EXCEPT 1,1
 
@@ -194,7 +194,7 @@ namespace Minesweeper.Tests
             {
                 for (int col = 0; col < size_cols; ++col)
                 {
-                    if (grid.MarkerStoreInspectable[row, col].isBomb)
+                    if (grid.MarkerStoreInspectable[row][col].isBomb)
                         ++actual_bombs;
                 }
             }

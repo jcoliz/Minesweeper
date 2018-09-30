@@ -17,7 +17,7 @@ namespace Minesweeper.Logic
         /// Protected so that test code can subclass and inspect.
         /// Outer list items are rows, inner list items are cols
         /// </remarks>
-        protected Marker[,] MarkerStore;
+        protected List<List<Marker>> MarkerStore;
 
         /// <summary>
         /// Consntruct a new marker grid
@@ -33,14 +33,16 @@ namespace Minesweeper.Logic
             if (numrows.HasValue)
                 rowsize = numrows.Value;
 
-            MarkerStore = new Marker[rowsize,colsize];
+            MarkerStore = new List<List<Marker>>();
 
             for (int row = 0; row < rowsize; ++row)
             {
+                var newrow = new List<Marker>();
                 for (int col = 0; col < colsize; ++col)
                 {
-                    MarkerStore[row, col] = new Marker();
+                    newrow.Add(new Marker());
                 }
+                MarkerStore.Add(newrow);
             }
 
             int bombs = numcols;
@@ -57,10 +59,10 @@ namespace Minesweeper.Logic
                     atrow = RandomGenerator.Next(rowsize);
                     atcol = RandomGenerator.Next(colsize);
                 }
-                while (MarkerStore[atrow, atcol].isBomb);
+                while (MarkerStore[atrow][atcol].isBomb);
 
                 // Place the bomb
-                MarkerStore[atrow, atcol].isBomb = true;
+                MarkerStore[atrow][atcol].isBomb = true;
             }
         }
 
@@ -70,26 +72,22 @@ namespace Minesweeper.Logic
         /// <returns></returns>
         public string[] Render()
         {
-            int numrows = MarkerStore.GetLength(0);
-            int numcols = MarkerStore.GetLength(1);
+            int numrows = MarkerStore.Count;
+            int numcols = MarkerStore[0].Count;
 
-            string[] result = new string[numrows];
+            List<string> result = new List<string>();
 
-            for(int row = 0; row < numrows; ++row)
+            foreach(var row in MarkerStore)
             {
                 string line = string.Empty;
 
-                for (int col = 0; col < numcols; ++col)
-                {
-                    var markerrender = MarkerStore[row, col].ToString();
+                foreach(var marker in row)
+                    line = line + marker;
 
-                    line = line + markerrender;
-                }
-
-                result[row] = line;
+                result.Add(line);
             }
 
-            return result;
+            return result.ToArray();
         }
 
         /// <summary>
@@ -102,60 +100,72 @@ namespace Minesweeper.Logic
         {
             PlayResult result = PlayResult.Continue;
 
-            int numrows = MarkerStore.GetLength(0);
-            int numcols = MarkerStore.GetLength(1);
+            int numrows = MarkerStore.Count;
+            int numcols = MarkerStore[0].Count;
 
-            if (row < 0 || row >= numrows || col < 0 || col >= numcols )
-                result = PlayResult.Invalid;
-            else if (MarkerStore[row, col].isShowing)
+            if (row < 0 || row >= numrows || col < 0 || col >= numcols)
                 result = PlayResult.Invalid;
             else
             {
-                // Reveal this marker
-                MarkerStore[row, col].isShowing = true;
+                var marker = MarkerStore[row][col];
 
-                if (MarkerStore[row, col].isBomb)
-                    result = PlayResult.GameOver;
+                if (marker.isShowing)
+                    result = PlayResult.Invalid;
                 else
                 {
-                    // Search for the other bombs
-                    int foundbombs = 0;
-                    for (int rowdelta = -1; rowdelta < 2; rowdelta++)
-                    {
-                        for (int coldelta = -1; coldelta < 2; coldelta++)
-                        {
-                            int lookrow = row + rowdelta;
-                            int lookcol = col + coldelta;
+                    // Reveal this marker
+                    marker.isShowing = true;
 
-                            if (lookrow >= 0 && lookrow < numrows && lookcol >= 0 && lookcol < numcols)
+                    // So did we die??
+                    if (marker.isBomb)
+                        result = PlayResult.GameOver;
+                    else
+                    {
+                        // Count up the number of nearby bombs
+                        int foundbombs = 0;
+                        for (int rowdelta = -1; rowdelta < 2; rowdelta++)
+                        {
+                            for (int coldelta = -1; coldelta < 2; coldelta++)
                             {
-                                if (MarkerStore[lookrow, lookcol].isBomb)
+                                int lookrow = row + rowdelta;
+                                int lookcol = col + coldelta;
+
+                                if (lookrow >= 0 && lookrow < numrows && lookcol >= 0 && lookcol < numcols)
                                 {
-                                    ++foundbombs;
+                                    if (MarkerStore[lookrow][lookcol].isBomb)
+                                    {
+                                        ++foundbombs;
+                                    }
                                 }
                             }
                         }
-                    }
-                    MarkerStore[row, col].NumNearbyBombs = foundbombs;
+                        marker.NumNearbyBombs = foundbombs;
 
-                    // Test for victory
-                    bool victory = true;
-                    for (int rowcheck = 0; rowcheck < numrows; rowcheck++)
-                    {
-                        for (int colcheck = 0; colcheck < numcols; colcheck++)
-                        {
-                            if (! MarkerStore[rowcheck,colcheck].isBomb && ! MarkerStore[rowcheck, colcheck].isShowing)
-                            {
-                                victory = false;
-                            }
-                        }
+                        // Test for victory
+                        if (isVictoryConditionMet())
+                            result = PlayResult.Victory;
                     }
-                    if (victory)
-                        result = PlayResult.Victory;
+                }
+            }
+            return result;
+        }
+
+        protected bool isVictoryConditionMet()
+        {
+            bool victory = true;
+
+            foreach (var r in MarkerStore)
+            {
+                foreach (var m in r)
+                {
+                    if (! m.isBomb && ! m.isShowing)
+                    {
+                        victory = false;
+                    }
                 }
             }
 
-            return result;
+            return victory;
         }
     }
 }
