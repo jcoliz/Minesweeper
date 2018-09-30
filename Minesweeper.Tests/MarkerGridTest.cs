@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Minesweeper.Logic;
-using Minesweeper.Tests.Helpers;
 
 namespace Minesweeper.Tests
 {
@@ -16,10 +15,10 @@ namespace Minesweeper.Tests
         public void ConstructSquare()
         {
             var size = 3;
-            var grid = new MarkerGridInspectable(size,null,0);
+            var grid = new Game(size, null,0);
 
-            Assert.AreEqual(size, grid.Markers.Count);
-            Assert.AreEqual(size, grid.Markers[0].Count);
+            Assert.AreEqual(size, grid.GameBoard.Markers.Count);
+            Assert.AreEqual(size, grid.GameBoard.Markers[0].Count);
         }
 
         [TestMethod]
@@ -27,17 +26,17 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
-            Assert.AreEqual(size_rows, grid.Markers.Count);
-            Assert.AreEqual(size_cols, grid.Markers[0].Count);
+            Assert.AreEqual(size_rows, grid.GameBoard.Markers.Count);
+            Assert.AreEqual(size_cols, grid.GameBoard.Markers[0].Count);
         }
         [TestMethod]
         public void RenderEmpty()
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             var rendered = grid.Render();
 
@@ -55,7 +54,7 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             grid.PlayAt(1, 1);
 
@@ -69,17 +68,17 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             // Plant a bomb!!
-            grid.Markers[1][1].isBomb = true;
+            grid.GameBoard.Markers[1][1].isBomb = true;
 
             var result = grid.PlayAt(1, 1);
 
             var rendered = grid.Render();
 
             Assert.AreEqual("#@#", rendered[1]);
-            Assert.AreEqual(Game.PlayResult.GameOver, result);
+            Assert.AreEqual(Logic.Game.PlayResult.GameOver, (Logic.Game.PlayResult)result);
         }
 
         [TestMethod]
@@ -87,17 +86,17 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             // Plant a bomb!!
-            grid.Markers[1][1].isBomb = true;
+            grid.GameBoard.Markers[1][1].isBomb = true;
 
             var result = grid.PlayAt(2, 1);
 
             var rendered = grid.Render();
 
             Assert.AreEqual("##1", rendered[1]);
-            Assert.AreEqual(Game.PlayResult.Continue, result);
+            Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)result);
         }
 
         [TestMethod]
@@ -105,24 +104,24 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             // Plant 8 bombs
-            grid.Markers[0][0].isBomb = true;
-            grid.Markers[0][1].isBomb = true;
-            grid.Markers[0][2].isBomb = true;
-            grid.Markers[1][0].isBomb = true;
-            grid.Markers[1][2].isBomb = true;
-            grid.Markers[2][0].isBomb = true;
-            grid.Markers[2][1].isBomb = true;
-            grid.Markers[2][2].isBomb = true;
+            grid.GameBoard.Markers[0][0].isBomb = true;
+            grid.GameBoard.Markers[0][1].isBomb = true;
+            grid.GameBoard.Markers[0][2].isBomb = true;
+            grid.GameBoard.Markers[1][0].isBomb = true;
+            grid.GameBoard.Markers[1][2].isBomb = true;
+            grid.GameBoard.Markers[2][0].isBomb = true;
+            grid.GameBoard.Markers[2][1].isBomb = true;
+            grid.GameBoard.Markers[2][2].isBomb = true;
 
             var result = grid.PlayAt(1, 1);
 
             var rendered = grid.Render();
 
             Assert.AreEqual("#8#", rendered[1]);
-            Assert.AreEqual(Game.PlayResult.Continue, result);
+            Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)result);
         }
 
         [TestMethod]
@@ -130,40 +129,40 @@ namespace Minesweeper.Tests
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             grid.PlayAt(1, 1);
             var result = grid.PlayAt(1, 1);
 
-            Assert.AreEqual(Game.PlayResult.Invalid, result);
+            Assert.AreEqual(Logic.Game.PlayResult.Invalid, (Logic.Game.PlayResult)result);
         }
         [TestMethod]
         public void CantPlayOffGrid()
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             var result = grid.PlayAt(20, 20);
 
-            Assert.AreEqual(Game.PlayResult.Invalid, result);
+            Assert.AreEqual(Logic.Game.PlayResult.Invalid, (Logic.Game.PlayResult)result);
         }
         [TestMethod]
         public void Win()
         {
             var size_cols = 3;
             var size_rows = 10;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, 0);
+            var grid = new Game(size_cols, size_rows, 0);
 
             // Plant 8 bombs
-            grid.Markers[0][0].isBomb = true;
-            grid.Markers[0][1].isBomb = true;
-            grid.Markers[0][2].isBomb = true;
-            grid.Markers[1][0].isBomb = true;
-            grid.Markers[1][2].isBomb = true;
-            grid.Markers[2][0].isBomb = true;
-            grid.Markers[2][1].isBomb = true;
-            grid.Markers[2][2].isBomb = true;
+            grid.GameBoard.Markers[0][0].isBomb = true;
+            grid.GameBoard.Markers[0][1].isBomb = true;
+            grid.GameBoard.Markers[0][2].isBomb = true;
+            grid.GameBoard.Markers[1][0].isBomb = true;
+            grid.GameBoard.Markers[1][2].isBomb = true;
+            grid.GameBoard.Markers[2][0].isBomb = true;
+            grid.GameBoard.Markers[2][1].isBomb = true;
+            grid.GameBoard.Markers[2][2].isBomb = true;
 
             // Play all the other places EXCEPT 1,1
 
@@ -172,14 +171,14 @@ namespace Minesweeper.Tests
                 for (int col = 0; col < size_cols; ++col)
                 {
                     var playresult = grid.PlayAt(col, row);
-                    Assert.AreEqual(Game.PlayResult.Continue, playresult);
+                    Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)playresult);
                 }
             }
 
             // Now play the final space
             var result = grid.PlayAt(1, 1);
 
-            Assert.AreEqual(Game.PlayResult.Victory, result);
+            Assert.AreEqual(Logic.Game.PlayResult.Victory, (Logic.Game.PlayResult)result);
         }
         [TestMethod]
         public void ConstructRectangularWithBombs()
@@ -187,14 +186,14 @@ namespace Minesweeper.Tests
             var size_cols = 3;
             var size_rows = 10;
             var num_bombs = size_cols * size_rows / 2;
-            var grid = new MarkerGridInspectable(size_cols, size_rows, num_bombs);
+            var grid = new Game(size_cols, size_rows, num_bombs);
 
             var actual_bombs = 0;
             for (int row = 0; row < size_rows; ++row)
             {
                 for (int col = 0; col < size_cols; ++col)
                 {
-                    if (grid.Markers[row][col].isBomb)
+                    if (grid.GameBoard.Markers[row][col].isBomb)
                         ++actual_bombs;
                 }
             }
