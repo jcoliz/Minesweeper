@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Minesweeper.Logic
 {
+    /// <summary>
+    /// A single position on a minesweeper game board
+    /// </summary>
     public class Marker
     {
         /// <summary>

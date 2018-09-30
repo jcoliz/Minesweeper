@@ -10,44 +10,51 @@ namespace Minesweeper.Logic
     /// </summary>
     public class Game
     {
+        #region Public Properties
+        /// <summary>
+        /// The universe of things which can happen after we make a move
+        /// </summary>
         public enum PlayResult { Invalid = 0, Continue, GameOver, Victory };
-
-        private Random RandomGenerator = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Internal storage of markers
         /// </summary>
         public Board GameBoard { get; }
+        #endregion
 
+        #region Public Methods
         /// <summary>
         /// Consntruct a new marker grid
         /// </summary>
         /// <param name="numcols">How many columns</param>
-        /// <param name="numrows">How many rows, or leave out for 'same as numcols'</param>
-        /// <param name="numbombs">How many bombs, or leave out for 'same as numcols'</param>
-        public Game(int numcols, int? numrows = null, int? numbombs = null)
+        /// <param name="numrows_optional">How many rows, or leave out for 'same as numcols'</param>
+        /// <param name="numbombs_optional">How many bombs, or leave out for 'same as numcols'</param>
+        public Game(int numcols, int? numrows_optional = null, int? numbombs_optional = null)
         {
-            var ColSize = numcols;
+            // Resolve optional parameters
 
-            var RowSize = numcols;
-            if (numrows.HasValue)
-                RowSize = numrows.Value;
-
-            GameBoard = new Board(new Size(ColSize, RowSize));
-
+            var numrows = numcols;
+            if (numrows_optional.HasValue)
+                numrows = numrows_optional.Value;
             int bombs = numcols;
-            if (numbombs.HasValue)
-                bombs = numbombs.Value;
+            if (numbombs_optional.HasValue)
+                bombs = numbombs_optional.Value;
 
-            while(bombs-- > 0)
+            // Set up the empty playing surface
+
+            GameBoard = new Board(new Size(numcols, numrows));
+
+            // Place bombs
+
+            while (bombs-- > 0)
             {
-                // Make sure there is not already a bomb here.
+                // Find a random place where there is not already a bomb
                 int atrow;
                 int atcol;
                 do
                 {
-                    atrow = RandomGenerator.Next(RowSize);
-                    atcol = RandomGenerator.Next(ColSize);
+                    atrow = RandomGenerator.Next(GameBoard.Dimensions.Height);
+                    atcol = RandomGenerator.Next(GameBoard.Dimensions.Width);
                 }
                 while (GameBoard.Markers[atrow][atcol].isBomb);
 
@@ -84,7 +91,7 @@ namespace Minesweeper.Logic
                         result = PlayResult.GameOver;
                     else
                     {
-                        marker.NumNearbyBombs = BombsNearPosition(row,col);
+                        marker.NumNearbyBombs = CountBombsNear(row,col);
 
                         if (isVictoryConditionMet())
                             result = PlayResult.Victory;
@@ -93,8 +100,14 @@ namespace Minesweeper.Logic
             }
             return result;
         }
+        #endregion
 
-        protected bool isVictoryConditionMet()
+        #region Internal Properties
+        private Random RandomGenerator = new Random(DateTime.Now.Millisecond);
+        #endregion
+
+        #region Internal Methods
+        private bool isVictoryConditionMet()
         {
             bool victory = true;
 
@@ -112,7 +125,7 @@ namespace Minesweeper.Logic
             return victory;
         }
 
-        protected int BombsNearPosition(int row, int col)
+        private int CountBombsNear(int row, int col)
         {
             // Count up the number of nearby bombs
             int foundbombs = 0;
@@ -135,5 +148,6 @@ namespace Minesweeper.Logic
 
             return foundbombs;
         }
+        #endregion
     }
 }
