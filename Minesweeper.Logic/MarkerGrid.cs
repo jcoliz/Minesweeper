@@ -9,14 +9,29 @@ namespace Minesweeper.Logic
         public enum PlayResult { Invalid = 0, Continue, GameOver, Victory };
 
         /// <summary>
+        /// Internal storage of markers
+        /// </summary>
+        /// <remarks>
+        /// Protected so that test code can subclass and inspect.
+        /// Outer list items are rows, inner list items are cols
+        /// </remarks>
+        protected Marker[,] MarkerStore;
+
+        /// <summary>
         /// Consntruct a new marker grid
         /// </summary>
         /// <param name="numcols">How many columns</param>
         /// <param name="numrows">How many rows, or leave out for 'same as numcols'</param>
         /// <param name="numbombs">How many bombs, or leave out for 'same as numcols'</param>
-        /// <param name="backingstore">Optional backing storage, useful for tests to inspect internal state</param>
-        public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null, List<List<Marker>> backingstore = null)
+        public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null)
         {
+            int colsize = numcols;
+
+            int rowsize = numcols;
+            if (numrows.HasValue)
+                rowsize = numrows.Value;
+
+            MarkerStore = new Marker[rowsize,colsize];
         }
 
         /// <summary>
