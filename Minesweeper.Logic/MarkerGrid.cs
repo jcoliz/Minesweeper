@@ -116,6 +116,21 @@ namespace Minesweeper.Logic
                         }
                     }
                     MarkerStore[row, col].NumNearbyBombs = foundbombs;
+
+                    // Test for victory
+                    bool victory = true;
+                    for (int rowcheck = 0; rowcheck < numrows; rowcheck++)
+                    {
+                        for (int colcheck = 0; colcheck < numcols; colcheck++)
+                        {
+                            if (! MarkerStore[rowcheck,colcheck].isBomb && ! MarkerStore[rowcheck, colcheck].isShowing)
+                            {
+                                victory = false;
+                            }
+                        }
+                    }
+                    if (victory)
+                        result = PlayResult.Victory;
                 }
             }
 

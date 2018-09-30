@@ -148,5 +148,38 @@ namespace Minesweeper.Tests
 
             Assert.AreEqual(MarkerGrid.PlayResult.Invalid, result);
         }
+        [TestMethod]
+        public void Win()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var grid = new MarkerGridInspectable(size_cols, size_rows);
+
+            // Plant 8 bombs
+            grid.MarkerStoreInspectable[0, 0].isBomb = true;
+            grid.MarkerStoreInspectable[0, 1].isBomb = true;
+            grid.MarkerStoreInspectable[0, 2].isBomb = true;
+            grid.MarkerStoreInspectable[1, 0].isBomb = true;
+            grid.MarkerStoreInspectable[1, 2].isBomb = true;
+            grid.MarkerStoreInspectable[2, 0].isBomb = true;
+            grid.MarkerStoreInspectable[2, 1].isBomb = true;
+            grid.MarkerStoreInspectable[2, 2].isBomb = true;
+
+            // Play all the other places EXCEPT 1,1
+
+            for(int row = 3; row < size_rows; ++row)
+            {
+                for (int col = 0; col < size_cols; ++col)
+                {
+                    var playresult = grid.PlayAt(col, row);
+                    Assert.AreEqual(MarkerGrid.PlayResult.Continue, playresult);
+                }
+            }
+
+            // Now play the final space
+            var result = grid.PlayAt(1, 1);
+
+            Assert.AreEqual(MarkerGrid.PlayResult.Victory, result);
+        }
     }
 }
