@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Minesweeper.Logic;
+using System.Linq;
 
 namespace Minesweeper.Tests
 {
@@ -159,15 +160,7 @@ namespace Minesweeper.Tests
             var num_bombs = SizeCols * SizeRows / 2;
             var grid = new Game(SizeCols, SizeRows, num_bombs);
 
-            var actual_bombs = 0;
-            for (int row = 0; row < SizeRows; ++row)
-            {
-                for (int col = 0; col < SizeCols; ++col)
-                {
-                    if (grid.GameBoard.Markers[row][col].isBomb)
-                        ++actual_bombs;
-                }
-            }
+            var actual_bombs = grid.GameBoard.Markers.Aggregate(0,(total, row) => total + row.Where(item => item.isBomb).Count());
 
             Assert.AreEqual(num_bombs, actual_bombs);
         }
