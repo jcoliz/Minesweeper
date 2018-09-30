@@ -4,28 +4,25 @@ using System.Drawing;
 namespace Minesweeper.Logic
 {
     /// <summary>
-    /// Contains a grid of markers for a console board game
+    /// Contains a generic grid of items
     /// </summary>
-    /// <remarks>
-    /// This could easily be made generic Board(T) where T: new
-    /// </remarks>
-    public class Board
+    public class Board<T> where T: new()
     {
         public Size Dimensions { get; }
-        public List<List<Marker>> Markers { get; }
+        public List<List<T>> Markers { get; }
 
         public Board(Size desireddimensions)
         {
             Dimensions = desireddimensions;
 
-            Markers = new List<List<Marker>>();
+            Markers = new List<List<T>>();
 
             for (int row = 0; row < Dimensions.Height; ++row)
             {
-                var newrow = new List<Marker>();
+                var newrow = new List<T>();
                 for (int col = 0; col < Dimensions.Width; ++col)
                 {
-                    newrow.Add(new Marker());
+                    newrow.Add(new T());
                 }
                 Markers.Add(newrow);
             }

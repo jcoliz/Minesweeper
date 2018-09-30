@@ -17,7 +17,7 @@ namespace Minesweeper.Logic
         /// <summary>
         /// Internal storage of markers
         /// </summary>
-        public Board GameBoard { get; }
+        public Board<Marker> GameBoard { get; }
         #endregion
 
         #region Public Methods
@@ -40,7 +40,7 @@ namespace Minesweeper.Logic
 
             // Set up the empty playing surface
 
-            GameBoard = new Board(new Size(numcols, numrows));
+            GameBoard = new Board<Marker>(new Size(numcols, numrows));
 
             // Place bombs
 

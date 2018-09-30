@@ -53,7 +53,7 @@ namespace Minesweeper
             Console.ReadLine();
         }
 
-        static void PrettyRender(Board board)
+        static void PrettyRender(Board<Marker> board)
         {
             var lines = new List<string>();
 
