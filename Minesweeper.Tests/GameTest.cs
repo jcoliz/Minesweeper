@@ -17,13 +17,11 @@ namespace Minesweeper.Tests
         {
             TestGame = new Game(SizeCols, SizeRows, 0);
         }
-
         [TestMethod]
         public void Empty()
         {
             Assert.IsNotNull(TestGame);
         }
-
         [TestMethod]
         public void ConstructSquare()
         {
@@ -33,7 +31,6 @@ namespace Minesweeper.Tests
             Assert.AreEqual(size, grid.GameBoard.Markers.Count);
             Assert.AreEqual(size, grid.GameBoard.Markers[0].Count);
         }
-
         [TestMethod]
         public void ConstructRectangular()
         {
@@ -63,7 +60,6 @@ namespace Minesweeper.Tests
 
             Assert.AreEqual("# #", rendered[1]);
         }
-
         [TestMethod]
         public void Die()
         {
@@ -76,7 +72,6 @@ namespace Minesweeper.Tests
             Assert.AreEqual("#@#", rendered[1]);
             Assert.AreEqual(Game.PlayResult.GameOver, result);
         }
-
         [TestMethod]
         public void ShowABomb()
         {
@@ -89,7 +84,6 @@ namespace Minesweeper.Tests
             Assert.AreEqual("##1", rendered[1]);
             Assert.AreEqual(Game.PlayResult.Continue, result);
         }
-
         [TestMethod]
         public void Show8Bombs()
         {
@@ -139,7 +133,6 @@ namespace Minesweeper.Tests
             TestGame.GameBoard.Markers[2][2].isBomb = true;
 
             // Play all the other places EXCEPT 1,1
-
             for(int row = 3; row < SizeRows; ++row)
             {
                 for (int col = 0; col < SizeCols; ++col)
@@ -159,11 +152,9 @@ namespace Minesweeper.Tests
         {
             var num_bombs = SizeCols * SizeRows / 2;
             var grid = new Game(SizeCols, SizeRows, num_bombs);
-
             var actual_bombs = grid.GameBoard.Markers.Aggregate(0,(total, row) => total + row.Where(item => item.isBomb).Count());
 
             Assert.AreEqual(num_bombs, actual_bombs);
         }
-
     }
 }
