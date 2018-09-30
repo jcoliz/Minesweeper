@@ -6,9 +6,22 @@ namespace Minesweeper.Tests
     [TestClass]
     public class GameTest
     {
+        const int SizeCols = 3;
+        const int SizeRows = 10;
+
+        Game TestGame;
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            TestGame = new Game(SizeCols, SizeRows, 0);
+        }
+
+
         [TestMethod]
         public void Empty()
         {
+            Assert.IsNotNull(TestGame);
         }
 
         [TestMethod]
