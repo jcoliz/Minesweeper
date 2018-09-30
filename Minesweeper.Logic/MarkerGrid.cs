@@ -10,6 +10,9 @@ namespace Minesweeper.Logic
 
         private Random RandomGenerator = new Random(DateTime.Now.Millisecond);
 
+        private int RowSize;
+        private int ColSize;
+
         /// <summary>
         /// Internal storage of markers
         /// </summary>
@@ -27,18 +30,18 @@ namespace Minesweeper.Logic
         /// <param name="numbombs">How many bombs, or leave out for 'same as numcols'</param>
         public MarkerGrid(int numcols, int? numrows = null, int? numbombs = null)
         {
-            int colsize = numcols;
+            ColSize = numcols;
 
-            int rowsize = numcols;
+            int RowSize = numcols;
             if (numrows.HasValue)
-                rowsize = numrows.Value;
+                RowSize = numrows.Value;
 
             MarkerStore = new List<List<Marker>>();
 
-            for (int row = 0; row < rowsize; ++row)
+            for (int row = 0; row < RowSize; ++row)
             {
                 var newrow = new List<Marker>();
-                for (int col = 0; col < colsize; ++col)
+                for (int col = 0; col < ColSize; ++col)
                 {
                     newrow.Add(new Marker());
                 }
@@ -56,8 +59,8 @@ namespace Minesweeper.Logic
                 int atcol;
                 do
                 {
-                    atrow = RandomGenerator.Next(rowsize);
-                    atcol = RandomGenerator.Next(colsize);
+                    atrow = RandomGenerator.Next(RowSize);
+                    atcol = RandomGenerator.Next(ColSize);
                 }
                 while (MarkerStore[atrow][atcol].isBomb);
 
@@ -72,9 +75,6 @@ namespace Minesweeper.Logic
         /// <returns></returns>
         public string[] Render()
         {
-            int numrows = MarkerStore.Count;
-            int numcols = MarkerStore[0].Count;
-
             List<string> result = new List<string>();
 
             foreach(var row in MarkerStore)
@@ -100,10 +100,7 @@ namespace Minesweeper.Logic
         {
             PlayResult result = PlayResult.Continue;
 
-            int numrows = MarkerStore.Count;
-            int numcols = MarkerStore[0].Count;
-
-            if (row < 0 || row >= numrows || col < 0 || col >= numcols)
+            if (row < 0 || row >= RowSize || col < 0 || col >= ColSize)
                 result = PlayResult.Invalid;
             else
             {
@@ -121,27 +118,8 @@ namespace Minesweeper.Logic
                         result = PlayResult.GameOver;
                     else
                     {
-                        // Count up the number of nearby bombs
-                        int foundbombs = 0;
-                        for (int rowdelta = -1; rowdelta < 2; rowdelta++)
-                        {
-                            for (int coldelta = -1; coldelta < 2; coldelta++)
-                            {
-                                int lookrow = row + rowdelta;
-                                int lookcol = col + coldelta;
+                        marker.NumNearbyBombs = BombsNearPosition(row,col);
 
-                                if (lookrow >= 0 && lookrow < numrows && lookcol >= 0 && lookcol < numcols)
-                                {
-                                    if (MarkerStore[lookrow][lookcol].isBomb)
-                                    {
-                                        ++foundbombs;
-                                    }
-                                }
-                            }
-                        }
-                        marker.NumNearbyBombs = foundbombs;
-
-                        // Test for victory
                         if (isVictoryConditionMet())
                             result = PlayResult.Victory;
                     }
@@ -166,6 +144,30 @@ namespace Minesweeper.Logic
             }
 
             return victory;
+        }
+
+        protected int BombsNearPosition(int row, int col)
+        {
+            // Count up the number of nearby bombs
+            int foundbombs = 0;
+            for (int rowdelta = -1; rowdelta < 2; rowdelta++)
+            {
+                for (int coldelta = -1; coldelta < 2; coldelta++)
+                {
+                    int lookrow = row + rowdelta;
+                    int lookcol = col + coldelta;
+
+                    if (lookrow >= 0 && lookrow < RowSize && lookcol >= 0 && lookcol < ColSize)
+                    {
+                        if (MarkerStore[lookrow][lookcol].isBomb)
+                        {
+                            ++foundbombs;
+                        }
+                    }
+                }
+            }
+
+            return foundbombs;
         }
     }
 }
