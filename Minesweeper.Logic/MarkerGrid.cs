@@ -26,6 +26,27 @@ namespace Minesweeper.Logic
                 Markers.Add(newrow);
             }
         }
+
+        /// <summary>
+        /// Render grid in a display-friendly way
+        /// </summary>
+        /// <returns></returns>
+        public List<string> Render()
+        {
+            List<string> result = new List<string>();
+
+            foreach (var row in Markers)
+            {
+                string line = string.Empty;
+
+                foreach (var marker in row)
+                    line = line + marker;
+
+                result.Add(line);
+            }
+
+            return result;
+        }
     }
 
     public class Game
@@ -84,22 +105,7 @@ namespace Minesweeper.Logic
         /// Render grid in a display-friendly way
         /// </summary>
         /// <returns></returns>
-        public string[] Render()
-        {
-            List<string> result = new List<string>();
-
-            foreach(var row in GameBoard.Markers)
-            {
-                string line = string.Empty;
-
-                foreach(var marker in row)
-                    line = line + marker;
-
-                result.Add(line);
-            }
-
-            return result.ToArray();
-        }
+        public List<string> Render() => GameBoard.Render();
 
         /// <summary>
         /// User plays at this position

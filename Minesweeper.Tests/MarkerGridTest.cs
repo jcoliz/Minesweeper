@@ -41,7 +41,7 @@ namespace Minesweeper.Tests
 
             var rendered = grid.Render();
 
-            Assert.AreEqual(size_rows, rendered.Length);
+            Assert.AreEqual(size_rows, rendered.Count);
             Assert.AreEqual(size_cols, rendered[0].Length);
 
             // Each line should be three occupied spaces
