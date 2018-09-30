@@ -20,7 +20,7 @@ namespace Minesweeper
             {
                 try
                 {
-                    Render();
+                    PrettyRender(Playfield.GameBoard);
 
                     Console.Write("Enter col,row to play or q to quit> ");
 
@@ -47,16 +47,18 @@ namespace Minesweeper
                 }
             }
 
-            Render();
+            PrettyRender(Playfield.GameBoard);
 
             Console.Write("Press enter:");
             Console.ReadLine();
         }
 
-        static void Render()
+        static void PrettyRender(Board board)
         {
+            var lines = new List<string>();
+
             var headers = new string[3] { "   ", "   ", "   " };
-            for (int i = 1; i <= Size; ++i)
+            for (int i = 1; i <= board.Dimensions.Width; ++i)
             {
                 headers[0] += (i / 10).ToString();
                 headers[1] += (i % 10).ToString();
@@ -64,21 +66,19 @@ namespace Minesweeper
             }
             var footers = new string[3] { headers[2], headers[1], headers[0] };
 
-            var lines = Playfield.Render();
-
-            Console.WriteLine();
-            foreach (var header in headers)
-                Console.WriteLine(header);
+            lines.AddRange(headers);
             int lineno = 1;
-            foreach (var line in lines)
+            foreach (var line in board.Render())
             {
-                Console.WriteLine($"{lineno,02}|{line}|{lineno,02}");
+                lines.Add($"{lineno,02}|{line}|{lineno,02}");
                 ++lineno;
             }
-            foreach (var footer in footers)
-                Console.WriteLine(footer);
-            Console.WriteLine();
+            lines.AddRange(footers);
 
+            Console.WriteLine();
+            foreach (var line in lines)
+                Console.WriteLine(line);
+            Console.WriteLine();
         }
     }
 }

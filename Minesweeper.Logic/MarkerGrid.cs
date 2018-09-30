@@ -17,11 +17,7 @@ namespace Minesweeper.Logic
         /// <summary>
         /// Internal storage of markers
         /// </summary>
-        /// <remarks>
-        /// Protected so that test code can subclass and inspect.
-        /// Outer list items are rows, inner list items are cols
-        /// </remarks>
-        protected Board GameBoard;
+        public Board GameBoard { get; }
 
         /// <summary>
         /// Consntruct a new marker grid
