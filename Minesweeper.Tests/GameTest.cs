@@ -4,7 +4,7 @@ using Minesweeper.Logic;
 namespace Minesweeper.Tests
 {
     [TestClass]
-    public class MarkerGridTest
+    public class GameTest
     {
         [TestMethod]
         public void Empty()
