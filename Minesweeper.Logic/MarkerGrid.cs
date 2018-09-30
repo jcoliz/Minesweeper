@@ -81,36 +81,42 @@ namespace Minesweeper.Logic
         {
             PlayResult result = PlayResult.Continue;
 
-            // Reveal this marker
-            MarkerStore[row, col].isShowing = true;
+            int numrows = MarkerStore.GetLength(0);
+            int numcols = MarkerStore.GetLength(1);
 
-            // Did we die?
-            if (MarkerStore[row, col].isBomb)
-                result = PlayResult.GameOver;
+            if (row < 0 || row >= numrows || col < 0 || col >= numcols )
+                result = PlayResult.Invalid;
+            else if (MarkerStore[row, col].isShowing)
+                result = PlayResult.Invalid;
             else
             {
+                // Reveal this marker
+                MarkerStore[row, col].isShowing = true;
 
-                // Search for the other bombs
-                int foundbombs = 0;
-                int numrows = MarkerStore.GetLength(0);
-                int numcols = MarkerStore.GetLength(1);
-                for (int rowdelta = -1; rowdelta < 2; rowdelta++)
+                if (MarkerStore[row, col].isBomb)
+                    result = PlayResult.GameOver;
+                else
                 {
-                    for (int coldelta = -1; coldelta < 2; coldelta++)
+                    // Search for the other bombs
+                    int foundbombs = 0;
+                    for (int rowdelta = -1; rowdelta < 2; rowdelta++)
                     {
-                        int lookrow = row + rowdelta;
-                        int lookcol = col + coldelta;
-
-                        if (lookrow >= 0 && lookrow < numrows && lookcol >= 0 && lookcol < numcols)
+                        for (int coldelta = -1; coldelta < 2; coldelta++)
                         {
-                            if (MarkerStore[lookrow,lookcol].isBomb)
+                            int lookrow = row + rowdelta;
+                            int lookcol = col + coldelta;
+
+                            if (lookrow >= 0 && lookrow < numrows && lookcol >= 0 && lookcol < numcols)
                             {
-                                ++foundbombs;
+                                if (MarkerStore[lookrow, lookcol].isBomb)
+                                {
+                                    ++foundbombs;
+                                }
                             }
                         }
                     }
+                    MarkerStore[row, col].NumNearbyBombs = foundbombs;
                 }
-                MarkerStore[row, col].NumNearbyBombs = foundbombs;
             }
 
             return result;

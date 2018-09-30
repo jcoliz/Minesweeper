@@ -100,5 +100,53 @@ namespace Minesweeper.Tests
             Assert.AreEqual(MarkerGrid.PlayResult.Continue, result);
         }
 
+        [TestMethod]
+        public void Show8Bombs()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var grid = new MarkerGridInspectable(size_cols, size_rows);
+
+            // Plant 8 bombs
+            grid.MarkerStoreInspectable[0, 0].isBomb = true;
+            grid.MarkerStoreInspectable[0, 1].isBomb = true;
+            grid.MarkerStoreInspectable[0, 2].isBomb = true;
+            grid.MarkerStoreInspectable[1, 0].isBomb = true;
+            grid.MarkerStoreInspectable[1, 2].isBomb = true;
+            grid.MarkerStoreInspectable[2, 0].isBomb = true;
+            grid.MarkerStoreInspectable[2, 1].isBomb = true;
+            grid.MarkerStoreInspectable[2, 2].isBomb = true;
+
+            var result = grid.PlayAt(1, 1);
+
+            var rendered = grid.Render();
+
+            Assert.AreEqual("#8#", rendered[1]);
+            Assert.AreEqual(MarkerGrid.PlayResult.Continue, result);
+        }
+
+        [TestMethod]
+        public void CantPlayDouble()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var grid = new MarkerGridInspectable(size_cols, size_rows);
+
+            grid.PlayAt(1, 1);
+            var result = grid.PlayAt(1, 1);
+
+            Assert.AreEqual(MarkerGrid.PlayResult.Invalid, result);
+        }
+        [TestMethod]
+        public void CantPlayOffGrid()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var grid = new MarkerGridInspectable(size_cols, size_rows);
+
+            var result = grid.PlayAt(20, 20);
+
+            Assert.AreEqual(MarkerGrid.PlayResult.Invalid, result);
+        }
     }
 }
