@@ -20,5 +20,15 @@ namespace Minesweeper.Logic
         /// How many neighbors have bombs
         /// </summary>
         public int NumNearbyBombs { get; set; }
+
+        public override string ToString()
+        {
+            if (isShowing)
+            {
+                return " ";
+            }
+            else
+                return "#";
+        }
     }
 }

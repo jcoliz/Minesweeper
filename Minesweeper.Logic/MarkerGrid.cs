@@ -32,6 +32,15 @@ namespace Minesweeper.Logic
                 rowsize = numrows.Value;
 
             MarkerStore = new Marker[rowsize,colsize];
+
+            for (int row = 0; row < numrows; ++row)
+            {
+                for (int col = 0; col < numcols; ++col)
+                {
+                    MarkerStore[row, col] = new Marker();
+                }
+            }
+
         }
 
         /// <summary>
@@ -40,7 +49,26 @@ namespace Minesweeper.Logic
         /// <returns></returns>
         public string[] Render()
         {
-            return new string[] {};
+            int numrows = MarkerStore.GetLength(0);
+            int numcols = MarkerStore.GetLength(1);
+
+            string[] result = new string[numrows];
+
+            for(int row = 0; row < numrows; ++row)
+            {
+                string line = string.Empty;
+
+                for (int col = 0; col < numcols; ++col)
+                {
+                    var markerrender = MarkerStore[row, col].ToString();
+
+                    line = line + markerrender;
+                }
+
+                result[row] = line;
+            }
+
+            return result;
         }
 
         /// <summary>
