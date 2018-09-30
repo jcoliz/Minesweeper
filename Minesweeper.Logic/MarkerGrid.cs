@@ -79,10 +79,16 @@ namespace Minesweeper.Logic
         /// <returns>Result of playing at this position</returns>
         public PlayResult PlayAt(int col, int row)
         {
+            PlayResult result = PlayResult.Continue;
+
             // Reveal this marker
             MarkerStore[row, col].isShowing = true;
 
-            return PlayResult.Continue;
+            // Did we die?
+            if (MarkerStore[row, col].isBomb)
+                result = PlayResult.GameOver;
+
+            return result;
         }
     }
 }

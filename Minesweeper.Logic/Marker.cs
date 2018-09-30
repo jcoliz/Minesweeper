@@ -25,7 +25,10 @@ namespace Minesweeper.Logic
         {
             if (isShowing)
             {
-                return " ";
+                if (isBomb)
+                    return "@";
+                else
+                    return " ";
             }
             else
                 return "#";

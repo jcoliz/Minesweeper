@@ -63,5 +63,23 @@ namespace Minesweeper.Tests
 
             Assert.AreEqual("# #", rendered[1]);
         }
+
+        [TestMethod]
+        public void Die()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var grid = new MarkerGridInspectable(size_cols, size_rows);
+
+            // Plant a bomb!!
+            grid.MarkerStoreInspectable[1, 1].isBomb = true;
+
+            var result = grid.PlayAt(1, 1);
+
+            var rendered = grid.Render();
+
+            Assert.AreEqual("#@#", rendered[1]);
+            Assert.AreEqual(MarkerGrid.PlayResult.GameOver, result);
+        }
     }
 }
