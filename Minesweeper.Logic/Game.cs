@@ -57,12 +57,6 @@ namespace Minesweeper.Logic
         }
 
         /// <summary>
-        /// Render grid in a display-friendly way
-        /// </summary>
-        /// <returns></returns>
-        public List<string> Render() => GameBoard.Render();
-
-        /// <summary>
         /// User plays at this position
         /// </summary>
         /// <param name="col">which column, from 0</param>

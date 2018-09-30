@@ -38,7 +38,7 @@ namespace Minesweeper.Tests
             var size_rows = 10;
             var grid = new Game(size_cols, size_rows, 0);
 
-            var rendered = grid.Render();
+            var rendered = grid.GameBoard.Render();
 
             Assert.AreEqual(size_rows, rendered.Count);
             Assert.AreEqual(size_cols, rendered[0].Length);
@@ -58,7 +58,7 @@ namespace Minesweeper.Tests
 
             grid.PlayAt(1, 1);
 
-            var rendered = grid.Render();
+            var rendered = grid.GameBoard.Render();
 
             Assert.AreEqual("# #", rendered[1]);
         }
@@ -75,7 +75,7 @@ namespace Minesweeper.Tests
 
             var result = grid.PlayAt(1, 1);
 
-            var rendered = grid.Render();
+            var rendered = grid.GameBoard.Render();
 
             Assert.AreEqual("#@#", rendered[1]);
             Assert.AreEqual(Logic.Game.PlayResult.GameOver, (Logic.Game.PlayResult)result);
@@ -93,7 +93,7 @@ namespace Minesweeper.Tests
 
             var result = grid.PlayAt(2, 1);
 
-            var rendered = grid.Render();
+            var rendered = grid.GameBoard.Render();
 
             Assert.AreEqual("##1", rendered[1]);
             Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)result);
@@ -118,7 +118,7 @@ namespace Minesweeper.Tests
 
             var result = grid.PlayAt(1, 1);
 
-            var rendered = grid.Render();
+            var rendered = grid.GameBoard.Render();
 
             Assert.AreEqual("#8#", rendered[1]);
             Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)result);
