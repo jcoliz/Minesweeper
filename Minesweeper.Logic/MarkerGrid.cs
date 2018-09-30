@@ -87,6 +87,31 @@ namespace Minesweeper.Logic
             // Did we die?
             if (MarkerStore[row, col].isBomb)
                 result = PlayResult.GameOver;
+            else
+            {
+
+                // Search for the other bombs
+                int foundbombs = 0;
+                int numrows = MarkerStore.GetLength(0);
+                int numcols = MarkerStore.GetLength(1);
+                for (int rowdelta = -1; rowdelta < 2; rowdelta++)
+                {
+                    for (int coldelta = -1; coldelta < 2; coldelta++)
+                    {
+                        int lookrow = row + rowdelta;
+                        int lookcol = col + coldelta;
+
+                        if (lookrow >= 0 && lookrow < numrows && lookcol >= 0 && lookcol < numcols)
+                        {
+                            if (MarkerStore[lookrow,lookcol].isBomb)
+                            {
+                                ++foundbombs;
+                            }
+                        }
+                    }
+                }
+                MarkerStore[row, col].NumNearbyBombs = foundbombs;
+            }
 
             return result;
         }

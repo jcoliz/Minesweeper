@@ -27,6 +27,8 @@ namespace Minesweeper.Logic
             {
                 if (isBomb)
                     return "@";
+                else if (NumNearbyBombs > 0)
+                    return NumNearbyBombs.ToString();
                 else
                     return " ";
             }
