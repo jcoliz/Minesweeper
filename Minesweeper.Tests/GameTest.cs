@@ -17,7 +17,6 @@ namespace Minesweeper.Tests
             TestGame = new Game(SizeCols, SizeRows, 0);
         }
 
-
         [TestMethod]
         public void Empty()
         {
@@ -37,24 +36,16 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void ConstructRectangular()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
-
-            Assert.AreEqual(size_rows, grid.GameBoard.Markers.Count);
-            Assert.AreEqual(size_cols, grid.GameBoard.Markers[0].Count);
+            Assert.AreEqual(SizeRows, TestGame.GameBoard.Markers.Count);
+            Assert.AreEqual(SizeCols, TestGame.GameBoard.Markers[0].Count);
         }
         [TestMethod]
         public void RenderEmpty()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            var rendered = TestGame.GameBoard.Render();
 
-            var rendered = grid.GameBoard.Render();
-
-            Assert.AreEqual(size_rows, rendered.Count);
-            Assert.AreEqual(size_cols, rendered[0].Length);
+            Assert.AreEqual(SizeRows, rendered.Count);
+            Assert.AreEqual(SizeCols, rendered[0].Length);
 
             // Each line should be three occupied spaces
             foreach(var line in rendered)
@@ -65,13 +56,9 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void PlaySingle()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            TestGame.PlayAt(1, 1);
 
-            grid.PlayAt(1, 1);
-
-            var rendered = grid.GameBoard.Render();
+            var rendered = TestGame.GameBoard.Render();
 
             Assert.AreEqual("# #", rendered[1]);
         }
@@ -79,132 +66,103 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void Die()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            TestGame.GameBoard.Markers[1][1].isBomb = true;
 
-            // Plant a bomb!!
-            grid.GameBoard.Markers[1][1].isBomb = true;
+            var result = TestGame.PlayAt(1, 1);
 
-            var result = grid.PlayAt(1, 1);
-
-            var rendered = grid.GameBoard.Render();
+            var rendered = TestGame.GameBoard.Render();
 
             Assert.AreEqual("#@#", rendered[1]);
-            Assert.AreEqual(Logic.Game.PlayResult.GameOver, (Logic.Game.PlayResult)result);
+            Assert.AreEqual(Game.PlayResult.GameOver, result);
         }
 
         [TestMethod]
         public void ShowABomb()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            TestGame.GameBoard.Markers[1][1].isBomb = true;
 
-            // Plant a bomb!!
-            grid.GameBoard.Markers[1][1].isBomb = true;
+            var result = TestGame.PlayAt(2, 1);
 
-            var result = grid.PlayAt(2, 1);
-
-            var rendered = grid.GameBoard.Render();
+            var rendered = TestGame.GameBoard.Render();
 
             Assert.AreEqual("##1", rendered[1]);
-            Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)result);
+            Assert.AreEqual(Game.PlayResult.Continue, result);
         }
 
         [TestMethod]
         public void Show8Bombs()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            TestGame.GameBoard.Markers[0][0].isBomb = true;
+            TestGame.GameBoard.Markers[0][1].isBomb = true;
+            TestGame.GameBoard.Markers[0][2].isBomb = true;
+            TestGame.GameBoard.Markers[1][0].isBomb = true;
+            TestGame.GameBoard.Markers[1][2].isBomb = true;
+            TestGame.GameBoard.Markers[2][0].isBomb = true;
+            TestGame.GameBoard.Markers[2][1].isBomb = true;
+            TestGame.GameBoard.Markers[2][2].isBomb = true;
 
-            // Plant 8 bombs
-            grid.GameBoard.Markers[0][0].isBomb = true;
-            grid.GameBoard.Markers[0][1].isBomb = true;
-            grid.GameBoard.Markers[0][2].isBomb = true;
-            grid.GameBoard.Markers[1][0].isBomb = true;
-            grid.GameBoard.Markers[1][2].isBomb = true;
-            grid.GameBoard.Markers[2][0].isBomb = true;
-            grid.GameBoard.Markers[2][1].isBomb = true;
-            grid.GameBoard.Markers[2][2].isBomb = true;
+            var result = TestGame.PlayAt(1, 1);
 
-            var result = grid.PlayAt(1, 1);
-
-            var rendered = grid.GameBoard.Render();
+            var rendered = TestGame.GameBoard.Render();
 
             Assert.AreEqual("#8#", rendered[1]);
-            Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)result);
+            Assert.AreEqual(Game.PlayResult.Continue, result);
         }
 
         [TestMethod]
         public void CantPlayDouble()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            TestGame.PlayAt(1, 1);
+            var result = TestGame.PlayAt(1, 1);
 
-            grid.PlayAt(1, 1);
-            var result = grid.PlayAt(1, 1);
-
-            Assert.AreEqual(Logic.Game.PlayResult.Invalid, (Logic.Game.PlayResult)result);
+            Assert.AreEqual(Game.PlayResult.Invalid, result);
         }
         [TestMethod]
-        public void CantPlayOffGrid()
+        public void CantPlayOffBoard()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
+            var result = TestGame.PlayAt(SizeCols * 2, SizeRows * 2);
 
-            var result = grid.PlayAt(20, 20);
-
-            Assert.AreEqual(Logic.Game.PlayResult.Invalid, (Logic.Game.PlayResult)result);
+            Assert.AreEqual(Game.PlayResult.Invalid, result);
         }
         [TestMethod]
         public void Win()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var grid = new Game(size_cols, size_rows, 0);
-
             // Plant 8 bombs
-            grid.GameBoard.Markers[0][0].isBomb = true;
-            grid.GameBoard.Markers[0][1].isBomb = true;
-            grid.GameBoard.Markers[0][2].isBomb = true;
-            grid.GameBoard.Markers[1][0].isBomb = true;
-            grid.GameBoard.Markers[1][2].isBomb = true;
-            grid.GameBoard.Markers[2][0].isBomb = true;
-            grid.GameBoard.Markers[2][1].isBomb = true;
-            grid.GameBoard.Markers[2][2].isBomb = true;
+            TestGame.GameBoard.Markers[0][0].isBomb = true;
+            TestGame.GameBoard.Markers[0][1].isBomb = true;
+            TestGame.GameBoard.Markers[0][2].isBomb = true;
+            TestGame.GameBoard.Markers[1][0].isBomb = true;
+            TestGame.GameBoard.Markers[1][2].isBomb = true;
+            TestGame.GameBoard.Markers[2][0].isBomb = true;
+            TestGame.GameBoard.Markers[2][1].isBomb = true;
+            TestGame.GameBoard.Markers[2][2].isBomb = true;
 
             // Play all the other places EXCEPT 1,1
 
-            for(int row = 3; row < size_rows; ++row)
+            for(int row = 3; row < SizeRows; ++row)
             {
-                for (int col = 0; col < size_cols; ++col)
+                for (int col = 0; col < SizeCols; ++col)
                 {
-                    var playresult = grid.PlayAt(col, row);
-                    Assert.AreEqual(Logic.Game.PlayResult.Continue, (Logic.Game.PlayResult)playresult);
+                    var playresult = TestGame.PlayAt(col, row);
+                    Assert.AreEqual(Game.PlayResult.Continue,playresult);
                 }
             }
 
             // Now play the final space
-            var result = grid.PlayAt(1, 1);
+            var result = TestGame.PlayAt(1, 1);
 
-            Assert.AreEqual(Logic.Game.PlayResult.Victory, (Logic.Game.PlayResult)result);
+            Assert.AreEqual(Game.PlayResult.Victory, result);
         }
         [TestMethod]
         public void ConstructRectangularWithBombs()
         {
-            var size_cols = 3;
-            var size_rows = 10;
-            var num_bombs = size_cols * size_rows / 2;
-            var grid = new Game(size_cols, size_rows, num_bombs);
+            var num_bombs = SizeCols * SizeRows / 2;
+            var grid = new Game(SizeCols, SizeRows, num_bombs);
 
             var actual_bombs = 0;
-            for (int row = 0; row < size_rows; ++row)
+            for (int row = 0; row < SizeRows; ++row)
             {
-                for (int col = 0; col < size_cols; ++col)
+                for (int col = 0; col < SizeCols; ++col)
                 {
                     if (grid.GameBoard.Markers[row][col].isBomb)
                         ++actual_bombs;
