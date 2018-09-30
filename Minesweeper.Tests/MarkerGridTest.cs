@@ -50,5 +50,18 @@ namespace Minesweeper.Tests
                 Assert.AreEqual("###", line);
             }
         }
+        [TestMethod]
+        public void PlaySingle()
+        {
+            var size_cols = 3;
+            var size_rows = 10;
+            var grid = new MarkerGridInspectable(size_cols, size_rows);
+
+            grid.PlayAt(1, 1);
+
+            var rendered = grid.Render();
+
+            Assert.AreEqual("# #", rendered[1]);
+        }
     }
 }
