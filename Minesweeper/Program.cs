@@ -1,6 +1,7 @@
 ﻿using Minesweeper.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Minesweeper
 {
@@ -31,10 +32,9 @@ namespace Minesweeper
 
                     var values = input.Split(",");
 
-                    int col = int.Parse(values[0]) - 1;
-                    int row = int.Parse(values[1]) - 1;
+                    var position = new Point(int.Parse(values[0]) - 1, int.Parse(values[1]) - 1);
 
-                    var result = Playfield.PlayAt(col, row);
+                    var result = Playfield.PlayAt(position);
 
                     Console.WriteLine(result.ToString());
 

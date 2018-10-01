@@ -8,12 +8,12 @@ namespace Minesweeper.Logic
     /// </summary>
     public class Board<T> where T: new()
     {
-        public Size Dimensions { get; }
+        public Rectangle Dimensions { get; }
         public List<List<T>> Markers { get; }
 
         public Board(Size desireddimensions)
         {
-            Dimensions = desireddimensions;
+            Dimensions = new Rectangle(new Point(), desireddimensions);
 
             Markers = new List<List<T>>();
 

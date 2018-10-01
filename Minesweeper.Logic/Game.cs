@@ -65,18 +65,17 @@ namespace Minesweeper.Logic
         /// <summary>
         /// User plays at this position
         /// </summary>
-        /// <param name="col">which column, from 0</param>
-        /// <param name="row">which row, from 0</param>
+        /// <param name="position">Position where to play, (col,row) 0-based</param>
         /// <returns>Result of playing at this position</returns>
-        public PlayResult PlayAt(int col, int row)
+        public PlayResult PlayAt(Point position)
         {
             PlayResult result = PlayResult.Continue;
 
-            if (row < 0 || row >= GameBoard.Dimensions.Height || col < 0 || col >= GameBoard.Dimensions.Width)
+            if (!GameBoard.Dimensions.Contains(position))
                 result = PlayResult.Invalid;
             else
             {
-                var marker = GameBoard.Markers[row][col];
+                var marker = GameBoard.Markers[position.Y][position.X];
 
                 if (marker.isShowing)
                     result = PlayResult.Invalid;
@@ -90,7 +89,7 @@ namespace Minesweeper.Logic
                         result = PlayResult.GameOver;
                     else
                     {
-                        marker.NumNearbyBombs = CountBombsNear(row,col);
+                        marker.NumNearbyBombs = CountBombsNear(position);
 
                         if (isVictoryConditionMet())
                             result = PlayResult.Victory;
@@ -113,7 +112,7 @@ namespace Minesweeper.Logic
             return 0 == GameBoard.Markers.Aggregate(0, (total, row) => total + row.Where(marker => !marker.isShowing && !marker.isBomb).Count());
         }
 
-        private int CountBombsNear(int row, int col)
+        private int CountBombsNear(Point center)
         {
             // Count up the number of nearby bombs
             int foundbombs = 0;
@@ -121,12 +120,11 @@ namespace Minesweeper.Logic
             {
                 for (int coldelta = -1; coldelta < 2; coldelta++)
                 {
-                    int lookrow = row + rowdelta;
-                    int lookcol = col + coldelta;
+                    var lookat = center + new Size(coldelta,rowdelta);
 
-                    if (lookrow >= 0 && lookrow < GameBoard.Dimensions.Height && lookcol >= 0 && lookcol < GameBoard.Dimensions.Width)
+                    if (GameBoard.Dimensions.Contains(lookat))
                     {
-                        if (GameBoard.Markers[lookrow][lookcol].isBomb)
+                        if (GameBoard.Markers[lookat.Y][lookat.X].isBomb)
                         {
                             ++foundbombs;
                         }

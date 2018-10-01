@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Minesweeper.Logic;
+using System.Drawing;
 using System.Linq;
 
 namespace Minesweeper.Tests
@@ -54,7 +55,7 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void PlaySingle()
         {
-            TestGame.PlayAt(1, 1);
+            TestGame.PlayAt(new Point(1, 1));
 
             var rendered = TestGame.GameBoard.Render();
 
@@ -65,7 +66,7 @@ namespace Minesweeper.Tests
         {
             TestGame.GameBoard.Markers[1][1].isBomb = true;
 
-            var result = TestGame.PlayAt(1, 1);
+            var result = TestGame.PlayAt(new Point(1, 1));
 
             var rendered = TestGame.GameBoard.Render();
 
@@ -77,7 +78,7 @@ namespace Minesweeper.Tests
         {
             TestGame.GameBoard.Markers[1][1].isBomb = true;
 
-            var result = TestGame.PlayAt(2, 1);
+            var result = TestGame.PlayAt(new Point(2, 1));
 
             var rendered = TestGame.GameBoard.Render();
 
@@ -96,7 +97,7 @@ namespace Minesweeper.Tests
             TestGame.GameBoard.Markers[2][1].isBomb = true;
             TestGame.GameBoard.Markers[2][2].isBomb = true;
 
-            var result = TestGame.PlayAt(1, 1);
+            var result = TestGame.PlayAt(new Point(1, 1));
 
             var rendered = TestGame.GameBoard.Render();
 
@@ -107,15 +108,15 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void CantPlayDouble()
         {
-            TestGame.PlayAt(1, 1);
-            var result = TestGame.PlayAt(1, 1);
+            TestGame.PlayAt(new Point(1, 1));
+            var result = TestGame.PlayAt(new Point(1, 1));
 
             Assert.AreEqual(Game.PlayResult.Invalid, result);
         }
         [TestMethod]
         public void CantPlayOffBoard()
         {
-            var result = TestGame.PlayAt(SizeCols * 2, SizeRows * 2);
+            var result = TestGame.PlayAt(new Point(SizeCols * 2, SizeRows * 2));
 
             Assert.AreEqual(Game.PlayResult.Invalid, result);
         }
@@ -137,13 +138,13 @@ namespace Minesweeper.Tests
             {
                 for (int col = 0; col < SizeCols; ++col)
                 {
-                    var playresult = TestGame.PlayAt(col, row);
+                    var playresult = TestGame.PlayAt(new Point(col, row));
                     Assert.AreEqual(Game.PlayResult.Continue,playresult);
                 }
             }
 
             // Now play the final space
-            var result = TestGame.PlayAt(1, 1);
+            var result = TestGame.PlayAt(new Point(1, 1));
 
             Assert.AreEqual(Game.PlayResult.Victory, result);
         }
