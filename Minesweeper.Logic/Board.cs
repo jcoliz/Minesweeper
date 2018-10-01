@@ -41,7 +41,7 @@ namespace Minesweeper.Logic
         /// <summary>
         /// Render grid in a display-friendly way
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of strings, one line for each row of the board</returns>
         public List<string> Render()
         {
             return
