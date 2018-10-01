@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 
 namespace Minesweeper.Logic
 {
@@ -42,19 +44,20 @@ namespace Minesweeper.Logic
         /// <returns></returns>
         public List<string> Render()
         {
-            List<string> result = new List<string>();
-
-            foreach (var row in Markers)
-            {
-                string line = string.Empty;
-
-                foreach (var marker in row)
-                    line = line + $"[{marker}] ";
-
-                result.Add(line);
-            }
-
-            return result;
+            return
+                Markers.Aggregate(
+                    new List<string>(), 
+                    (result, row) => 
+                    {
+                        result.Add(
+                            row.Aggregate(
+                                new StringBuilder(), 
+                                (sb, marker) => sb.Append($"[{marker}] ")
+                            ).ToString()
+                        );
+                        return result;
+                    }
+                );
         }
     }
 }
