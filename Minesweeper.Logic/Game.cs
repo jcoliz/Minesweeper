@@ -48,17 +48,18 @@ namespace Minesweeper.Logic
             while (bombs-- > 0)
             {
                 // Find a random place where there is not already a bomb
-                int atrow;
-                int atcol;
+                Point position;
                 do
                 {
-                    atrow = RandomGenerator.Next(GameBoard.Dimensions.Height);
-                    atcol = RandomGenerator.Next(GameBoard.Dimensions.Width);
+                    position = new Point(
+                        RandomGenerator.Next(GameBoard.Dimensions.Width),
+                        RandomGenerator.Next(GameBoard.Dimensions.Height)
+                    );
                 }
-                while (GameBoard.Markers[atrow][atcol].isBomb);
+                while (GameBoard[position].isBomb);
 
                 // Place the bomb
-                GameBoard.Markers[atrow][atcol].isBomb = true;
+                GameBoard[position].isBomb = true;
             }
         }
 
@@ -75,7 +76,7 @@ namespace Minesweeper.Logic
                 result = PlayResult.Invalid;
             else
             {
-                var marker = GameBoard.Markers[position.Y][position.X];
+                var marker = GameBoard[position];
 
                 if (marker.isShowing)
                     result = PlayResult.Invalid;
@@ -124,7 +125,7 @@ namespace Minesweeper.Logic
 
                     if (GameBoard.Dimensions.Contains(lookat))
                     {
-                        if (GameBoard.Markers[lookat.Y][lookat.X].isBomb)
+                        if (GameBoard[lookat].isBomb)
                         {
                             ++foundbombs;
                         }

@@ -29,6 +29,13 @@ namespace Minesweeper.Logic
         }
 
         /// <summary>
+        /// Indexer for convenient access to markers
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public T this[Point position] => Markers[position.Y][position.X];
+
+        /// <summary>
         /// Render grid in a display-friendly way
         /// </summary>
         /// <returns></returns>
