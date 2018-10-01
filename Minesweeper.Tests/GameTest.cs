@@ -43,12 +43,12 @@ namespace Minesweeper.Tests
             var rendered = TestGame.GameBoard.Render();
 
             Assert.AreEqual(SizeRows, rendered.Count);
-            Assert.AreEqual(SizeCols, rendered[0].Length);
+            Assert.AreEqual(SizeCols * 4, rendered[0].Length);
 
             // Each line should be three occupied spaces
             foreach(var line in rendered)
             {
-                Assert.AreEqual("###", line);
+                Assert.AreEqual("[#] [#] [#] ", line);
             }
         }
         [TestMethod]
@@ -58,7 +58,7 @@ namespace Minesweeper.Tests
 
             var rendered = TestGame.GameBoard.Render();
 
-            Assert.AreEqual("# #", rendered[1]);
+            Assert.AreEqual("[#] [ ] [#] ", rendered[1]);
         }
         [TestMethod]
         public void Die()
@@ -69,7 +69,7 @@ namespace Minesweeper.Tests
 
             var rendered = TestGame.GameBoard.Render();
 
-            Assert.AreEqual("#@#", rendered[1]);
+            Assert.AreEqual("[#] [@] [#] ", rendered[1]);
             Assert.AreEqual(Game.PlayResult.GameOver, result);
         }
         [TestMethod]
@@ -81,7 +81,7 @@ namespace Minesweeper.Tests
 
             var rendered = TestGame.GameBoard.Render();
 
-            Assert.AreEqual("##1", rendered[1]);
+            Assert.AreEqual("[#] [#] [1] ", rendered[1]);
             Assert.AreEqual(Game.PlayResult.Continue, result);
         }
         [TestMethod]
@@ -100,7 +100,7 @@ namespace Minesweeper.Tests
 
             var rendered = TestGame.GameBoard.Render();
 
-            Assert.AreEqual("#8#", rendered[1]);
+            Assert.AreEqual("[#] [8] [#] ", rendered[1]);
             Assert.AreEqual(Game.PlayResult.Continue, result);
         }
 

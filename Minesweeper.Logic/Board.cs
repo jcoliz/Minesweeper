@@ -41,7 +41,7 @@ namespace Minesweeper.Logic
                 string line = string.Empty;
 
                 foreach (var marker in row)
-                    line = line + marker;
+                    line = line + $"[{marker}] ";
 
                 result.Add(line);
             }

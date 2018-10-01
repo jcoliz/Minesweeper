@@ -57,12 +57,12 @@ namespace Minesweeper
         {
             var lines = new List<string>();
 
-            var headers = new string[3] { "   ", "   ", "   " };
+            var headers = new string[3] { "     ", "     ", "   --" };
             for (int i = 1; i <= board.Dimensions.Width; ++i)
             {
-                headers[0] += (i / 10).ToString();
-                headers[1] += (i % 10).ToString();
-                headers[2] += '-';
+                headers[0] += (i / 10).ToString() + "   ";
+                headers[1] += (i % 10).ToString() + "   ";
+                headers[2] += "----";
             }
             var footers = new string[3] { headers[2], headers[1], headers[0] };
 
@@ -70,7 +70,7 @@ namespace Minesweeper
             int lineno = 1;
             foreach (var line in board.Render())
             {
-                lines.Add($"{lineno,02}|{line}|{lineno,02}");
+                lines.Add($"{lineno,02}| {line}|{lineno,02}");
                 ++lineno;
             }
             lines.AddRange(footers);
