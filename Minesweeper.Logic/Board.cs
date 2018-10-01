@@ -34,6 +34,7 @@ namespace Minesweeper.Logic
         /// <param name="position"></param>
         /// <returns></returns>
         public T this[Point position] => Markers[position.Y][position.X];
+        public T this[int x,int y] => Markers[y][x];
 
         /// <summary>
         /// Render grid in a display-friendly way

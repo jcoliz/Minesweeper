@@ -118,7 +118,7 @@ namespace Minesweeper.Logic
             int result = 0;
 
             // Check in the area immediately surrounding the center (1 away in each direction)
-            var checkarea = new Rectangle(center.X - 1, center.Y - 1, 3, 3);
+            var checkarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
 
             // Ensure the checking area stays within the game board
             checkarea.Intersect(GameBoard.Dimensions);
@@ -128,8 +128,7 @@ namespace Minesweeper.Logic
             {
                 for (int y = checkarea.Y; y < checkarea.Bottom; y++)
                 {
-                    var check = new Point(x, y);
-                    if (GameBoard[check].isBomb)
+                    if (GameBoard[x,y].isBomb)
                     {
                         ++result;
                     }
