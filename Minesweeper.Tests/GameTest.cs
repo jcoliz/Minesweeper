@@ -53,6 +53,16 @@ namespace Minesweeper.Tests
             }
         }
         [TestMethod]
+        public void PlayOrigin()
+        {
+            TestGame.GameBoard.Markers[1][1].isBomb = true;
+            TestGame.PlayAt(new Point(0, 0));
+
+            var rendered = TestGame.GameBoard.Render();
+
+            Assert.AreEqual("[1] [#] [#] ", rendered[0]);
+        }
+        [TestMethod]
         public void PlaySingle()
         {
             TestGame.PlayAt(new Point(1, 1));

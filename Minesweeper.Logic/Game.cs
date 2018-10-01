@@ -115,25 +115,28 @@ namespace Minesweeper.Logic
 
         private int CountBombsNear(Point center)
         {
-            // Count up the number of nearby bombs
-            int foundbombs = 0;
-            for (int rowdelta = -1; rowdelta < 2; rowdelta++)
-            {
-                for (int coldelta = -1; coldelta < 2; coldelta++)
-                {
-                    var lookat = center + new Size(coldelta,rowdelta);
+            int result = 0;
 
-                    if (GameBoard.Dimensions.Contains(lookat))
+            // Check in the area immediately surrounding the center (1 away in each direction)
+            var checkarea = new Rectangle(center.X - 1, center.Y - 1, 3, 3);
+
+            // Ensure the checking area stays within the game board
+            checkarea.Intersect(GameBoard.Dimensions);
+
+            // Count up the number of bombs within the checking area
+            for (int x = checkarea.X; x < checkarea.Right; x++)
+            {
+                for (int y = checkarea.Y; y < checkarea.Bottom; y++)
+                {
+                    var check = new Point(x, y);
+                    if (GameBoard[check].isBomb)
                     {
-                        if (GameBoard[lookat].isBomb)
-                        {
-                            ++foundbombs;
-                        }
+                        ++result;
                     }
                 }
             }
 
-            return foundbombs;
+            return result;
         }
         #endregion
     }
