@@ -92,6 +92,12 @@ namespace Minesweeper.Logic
                     {
                         marker.NumNearbyBombs = CountBombsNear(position);
 
+                        // If this space is empty, recursively play all still-hidden spaces around me
+                        if (marker.NumNearbyBombs == 0)
+                        {
+                            PlayAllNear(position);
+                        }
+
                         if (isVictoryConditionMet())
                             result = PlayResult.Victory;
                     }
@@ -137,6 +143,31 @@ namespace Minesweeper.Logic
 
             return result;
         }
+
+        private int PlayAllNear(Point center)
+        {
+            int result = 0;
+
+            // play the area immediately surrounding the center (1 away in each direction)
+            var checkarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
+
+            // Ensure the playing area stays within the game board
+            checkarea.Intersect(GameBoard.Dimensions);
+
+            for (int x = checkarea.X; x < checkarea.Right; x++)
+            {
+                for (int y = checkarea.Y; y < checkarea.Bottom; y++)
+                {
+                    if (! GameBoard[x, y].isShowing)
+                    {
+                        PlayAt(new Point(x, y));
+                    }
+                }
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }

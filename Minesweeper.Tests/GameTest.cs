@@ -69,7 +69,7 @@ namespace Minesweeper.Tests
 
             var rendered = TestGame.GameBoard.Render();
 
-            Assert.AreEqual("[#] [ ] [#] ", rendered[1]);
+            Assert.AreEqual("[ ] [ ] [ ] ", rendered[1]);
         }
         [TestMethod]
         public void Die()
@@ -143,18 +143,13 @@ namespace Minesweeper.Tests
             TestGame.GameBoard.Markers[2][1].isBomb = true;
             TestGame.GameBoard.Markers[2][2].isBomb = true;
 
-            // Play all the other places EXCEPT 1,1
-            for(int row = 3; row < SizeRows; ++row)
-            {
-                for (int col = 0; col < SizeCols; ++col)
-                {
-                    var playresult = TestGame.PlayAt(new Point(col, row));
-                    Assert.AreEqual(Game.PlayResult.Continue,playresult);
-                }
-            }
+            // Empty the field below the 8 bombs
+            var result = TestGame.PlayAt(new Point(1, 4));
+
+            Assert.AreEqual(Game.PlayResult.Continue, result);
 
             // Now play the final space
-            var result = TestGame.PlayAt(new Point(1, 1));
+            result = TestGame.PlayAt(new Point(1, 1));
 
             Assert.AreEqual(Game.PlayResult.Victory, result);
         }
@@ -166,6 +161,28 @@ namespace Minesweeper.Tests
             var actual_bombs = grid.GameBoard.Markers.Aggregate(0,(total, row) => total + row.Where(item => item.isBomb).Count());
 
             Assert.AreEqual(num_bombs, actual_bombs);
+        }
+
+        [TestMethod]
+        public void ClearMultipleAtOnce()
+        {
+            // Plant bombs around an empty space
+            TestGame.GameBoard.Markers[0][0].isBomb = true;
+            TestGame.GameBoard.Markers[0][1].isBomb = true;
+            TestGame.GameBoard.Markers[0][2].isBomb = true;
+            TestGame.GameBoard.Markers[1][0].isBomb = true;
+            TestGame.GameBoard.Markers[2][0].isBomb = true;
+            TestGame.GameBoard.Markers[3][0].isBomb = true;
+            TestGame.GameBoard.Markers[4][0].isBomb = true;
+            TestGame.GameBoard.Markers[4][1].isBomb = true;
+            TestGame.GameBoard.Markers[4][2].isBomb = true;
+
+            // Play in the empty space
+            var result = TestGame.PlayAt(new Point(2, 2));
+
+            // Check that a neighboring space is open
+            var actual = TestGame.GameBoard.Markers[3][1].isShowing;
+            Assert.AreEqual(true, actual);
         }
     }
 }
