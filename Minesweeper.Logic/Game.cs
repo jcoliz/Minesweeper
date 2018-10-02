@@ -75,13 +75,18 @@ namespace Minesweeper.Logic
             PlayResult result = PlayResult.Continue;
 
             if (!GameBoard.Dimensions.Contains(position))
+            {
                 result = PlayResult.Invalid;
+            }
             else
             {
                 var marker = GameBoard[position];
 
                 if (marker.isShowing)
+                {
+                    // Can't play at a position which is already showing its marker
                     result = PlayResult.Invalid;
+                }
                 else
                 {
                     // Reveal this marker
@@ -89,16 +94,16 @@ namespace Minesweeper.Logic
 
                     // So did we die??
                     if (marker.isBomb)
+                    {
                         result = PlayResult.GameOver;
+                    }
                     else
                     {
                         marker.NumNearbyBombs = CountBombsNear(position);
 
                         // If this space is empty, recursively play all still-hidden spaces around me
-                        if (marker.NumNearbyBombs == 0)
-                        {
+                        if (0 == marker.NumNearbyBombs)
                             PlayAllNear(position);
-                        }
 
                         if (isVictoryConditionMet())
                             result = PlayResult.Victory;
@@ -117,37 +122,31 @@ namespace Minesweeper.Logic
         private bool isVictoryConditionMet()
         {
             // Victory is met when every square is either showing or has a bomb
-
-            return 0 == GameBoard.Markers.Aggregate(0, (total, row) => total + row.Where(marker => !marker.isShowing && !marker.isBomb).Count());
+            return 0 == GetRectangleEnumerator(GameBoard.Dimensions).Select(p=>GameBoard[p]).Where(m => !m.isShowing && !m.isBomb).Count();
         }
 
         private int CountBombsNear(Point center)
         {
             // Check in the area immediately surrounding the center (1 away in each direction)
-            var checkarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
+            var nearby = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
 
             // Ensure the checking area stays within the game board
-            checkarea.Intersect(GameBoard.Dimensions);
+            nearby.Intersect(GameBoard.Dimensions);
 
             // Count up the number of bombs within the checking area
-            return GetRectangleEnumerator(checkarea).Where(p => GameBoard[p].isBomb).Count();
+            return GetRectangleEnumerator(nearby).Where(p => GameBoard[p].isBomb).Count();
         }
 
         private void PlayAllNear(Point center)
         {
             // play the area immediately surrounding the center (1 away in each direction)
-            var playarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
+            var nearby = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
 
             // Ensure the playing area stays within the game board
-            playarea.Intersect(GameBoard.Dimensions);
-
-            foreach(var p in GetRectangleEnumerator(playarea))
-            {
-                if (!GameBoard[p].isShowing)
-                {
-                    PlayAt(p);
-                }
-            }
+            nearby.Intersect(GameBoard.Dimensions);
+            
+            // Play each item where it's not showing
+            GetRectangleEnumerator(nearby).Where(p => !GameBoard[p].isShowing).ToList().ForEach(p => PlayAt(p));
         }
 
         /// <summary>
@@ -165,7 +164,6 @@ namespace Minesweeper.Logic
                 }
             }
         }
-
         #endregion
     }
 }
