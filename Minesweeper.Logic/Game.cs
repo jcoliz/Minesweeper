@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -121,8 +123,6 @@ namespace Minesweeper.Logic
 
         private int CountBombsNear(Point center)
         {
-            int result = 0;
-
             // Check in the area immediately surrounding the center (1 away in each direction)
             var checkarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
 
@@ -130,42 +130,40 @@ namespace Minesweeper.Logic
             checkarea.Intersect(GameBoard.Dimensions);
 
             // Count up the number of bombs within the checking area
-            for (int x = checkarea.X; x < checkarea.Right; x++)
-            {
-                for (int y = checkarea.Y; y < checkarea.Bottom; y++)
-                {
-                    if (GameBoard[x,y].isBomb)
-                    {
-                        ++result;
-                    }
-                }
-            }
-
-            return result;
+            return GetRectangleEnumerator(checkarea).Where(p => GameBoard[p].isBomb).Count();
         }
 
-        private int PlayAllNear(Point center)
+        private void PlayAllNear(Point center)
         {
-            int result = 0;
-
             // play the area immediately surrounding the center (1 away in each direction)
-            var checkarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
+            var playarea = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
 
             // Ensure the playing area stays within the game board
-            checkarea.Intersect(GameBoard.Dimensions);
+            playarea.Intersect(GameBoard.Dimensions);
 
-            for (int x = checkarea.X; x < checkarea.Right; x++)
+            foreach(var p in GetRectangleEnumerator(playarea))
             {
-                for (int y = checkarea.Y; y < checkarea.Bottom; y++)
+                if (!GameBoard[p].isShowing)
                 {
-                    if (! GameBoard[x, y].isShowing)
-                    {
-                        PlayAt(new Point(x, y));
-                    }
+                    PlayAt(p);
                 }
             }
+        }
 
-            return result;
+        /// <summary>
+        /// General way to iterate through all the points in a rectangle
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns>Enumerator to iterate over points</returns>
+        private static IEnumerable<Point> GetRectangleEnumerator(Rectangle r)
+        {
+            for (int x = r.X; x < r.Right; x++)
+            {
+                for (int y = r.Y; y < r.Bottom; y++)
+                {
+                    yield return new Point(x, y);
+                }
+            }
         }
 
         #endregion
