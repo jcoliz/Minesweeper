@@ -16,7 +16,7 @@ namespace Minesweeper.Tests
         [TestInitialize]
         public void SetUp()
         {
-            TestGame = new Game(SizeCols, SizeRows, 0);
+            TestGame = new Game(new Size(SizeCols, SizeRows), 0);
         }
         [TestMethod]
         public void Empty()
@@ -26,8 +26,8 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void ConstructSquare()
         {
-            var size = 3;
-            var grid = new Game(size, null,0);
+            const int size = 3;
+            var grid = new Game(new Size(size,size),0);
 
             Assert.AreEqual(size, grid.GameBoard.Markers.Count);
             Assert.AreEqual(size, grid.GameBoard.Markers[0].Count);
@@ -157,7 +157,7 @@ namespace Minesweeper.Tests
         public void ConstructRectangularWithBombs()
         {
             var num_bombs = SizeCols * SizeRows / 2;
-            var grid = new Game(SizeCols, SizeRows, num_bombs);
+            var grid = new Game(new Size(SizeCols, SizeRows), num_bombs);
             var actual_bombs = grid.GameBoard.Markers.Aggregate(0,(total, row) => total + row.Where(item => item.isBomb).Count());
 
             Assert.AreEqual(num_bombs, actual_bombs);

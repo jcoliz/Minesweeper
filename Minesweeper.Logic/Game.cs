@@ -30,23 +30,13 @@ namespace Minesweeper.Logic
         /// <param name="numcols">How many columns</param>
         /// <param name="numrows_optional">How many rows, or leave out for 'same as numcols'</param>
         /// <param name="numbombs_optional">How many bombs, or leave out for 'same as numcols'</param>
-        public Game(int numcols, int? numrows_optional = null, int? numbombs_optional = null)
+        public Game(Size boardsize, int? numbombs_optional = null)
         {
-            // Resolve optional parameters
-
-            var numrows = numcols;
-            if (numrows_optional.HasValue)
-                numrows = numrows_optional.Value;
-            int bombs = numcols;
-            if (numbombs_optional.HasValue)
-                bombs = numbombs_optional.Value;
-
             // Set up the empty playing surface
-
-            GameBoard = new Board<Marker>(new Size(numcols, numrows));
+            GameBoard = new Board<Marker>(boardsize);
 
             // Place bombs
-
+            int bombs = numbombs_optional.HasValue ? numbombs_optional.Value : boardsize.Width;
             while (bombs-- > 0)
             {
                 // Find a random place where there is not already a bomb

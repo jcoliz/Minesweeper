@@ -8,13 +8,13 @@ namespace Minesweeper
     class Program
     {
         static Game Playfield;
-        const int Size = 9;
+        const int PlayfieldSize = 9;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Minesweeper!");
 
-            Playfield = new Game(Size);
+            Playfield = new Game(new Size(PlayfieldSize, PlayfieldSize));
 
             bool done = false;
             while(!done)
