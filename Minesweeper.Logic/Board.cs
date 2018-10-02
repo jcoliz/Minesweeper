@@ -11,7 +11,6 @@ namespace Minesweeper.Logic
     public class Board<T> where T: new()
     {
         public Rectangle Dimensions { get; }
-        public List<List<T>> Markers { get; }
 
         public Board(Size desireddimensions)
         {
@@ -31,10 +30,8 @@ namespace Minesweeper.Logic
         }
 
         /// <summary>
-        /// Indexer for convenient access to markers
+        /// Indexer for markers
         /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
         public T this[Point position] => Markers[position.Y][position.X];
         public T this[int x,int y] => Markers[y][x];
 
@@ -59,5 +56,7 @@ namespace Minesweeper.Logic
                     }
                 );
         }
+
+        private List<List<T>> Markers { get; }
     }
 }

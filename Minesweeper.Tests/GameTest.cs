@@ -29,14 +29,16 @@ namespace Minesweeper.Tests
             const int size = 3;
             var grid = new Game(new Size(size,size),0);
 
-            Assert.AreEqual(size, grid.GameBoard.Markers.Count);
-            Assert.AreEqual(size, grid.GameBoard.Markers[0].Count);
+            Assert.AreEqual(size, grid.GameBoard.Dimensions.Width);
+            Assert.AreEqual(size, grid.GameBoard.Dimensions.Height);
+            Assert.AreEqual("#",grid.GameBoard[size - 1, size - 1].ToString());
         }
         [TestMethod]
         public void ConstructRectangular()
         {
-            Assert.AreEqual(SizeRows, TestGame.GameBoard.Markers.Count);
-            Assert.AreEqual(SizeCols, TestGame.GameBoard.Markers[0].Count);
+            Assert.AreEqual(SizeCols, TestGame.GameBoard.Dimensions.Width);
+            Assert.AreEqual(SizeRows, TestGame.GameBoard.Dimensions.Height);
+            Assert.AreEqual("#", TestGame.GameBoard[SizeCols - 1, SizeRows - 1].ToString());
         }
         [TestMethod]
         public void RenderEmpty()
@@ -55,7 +57,7 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void PlayOrigin()
         {
-            TestGame.GameBoard.Markers[1][1].isBomb = true;
+            TestGame.GameBoard[1,1].isBomb = true;
             TestGame.PlayAt(new Point(0, 0));
 
             var rendered = TestGame.GameBoard.Render();
@@ -74,7 +76,7 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void Die()
         {
-            TestGame.GameBoard.Markers[1][1].isBomb = true;
+            TestGame.GameBoard[1,1].isBomb = true;
 
             var result = TestGame.PlayAt(new Point(1, 1));
 
@@ -86,7 +88,7 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void ShowABomb()
         {
-            TestGame.GameBoard.Markers[1][1].isBomb = true;
+            TestGame.GameBoard[1,1].isBomb = true;
 
             var result = TestGame.PlayAt(new Point(2, 1));
 
@@ -98,14 +100,14 @@ namespace Minesweeper.Tests
         [TestMethod]
         public void Show8Bombs()
         {
-            TestGame.GameBoard.Markers[0][0].isBomb = true;
-            TestGame.GameBoard.Markers[0][1].isBomb = true;
-            TestGame.GameBoard.Markers[0][2].isBomb = true;
-            TestGame.GameBoard.Markers[1][0].isBomb = true;
-            TestGame.GameBoard.Markers[1][2].isBomb = true;
-            TestGame.GameBoard.Markers[2][0].isBomb = true;
-            TestGame.GameBoard.Markers[2][1].isBomb = true;
-            TestGame.GameBoard.Markers[2][2].isBomb = true;
+            TestGame.GameBoard[0, 0].isBomb = true;
+            TestGame.GameBoard[1, 0].isBomb = true;
+            TestGame.GameBoard[2, 0].isBomb = true;
+            TestGame.GameBoard[0, 1].isBomb = true;
+            TestGame.GameBoard[2, 1].isBomb = true;
+            TestGame.GameBoard[0, 2].isBomb = true;
+            TestGame.GameBoard[1, 2].isBomb = true;
+            TestGame.GameBoard[2, 2].isBomb = true;
 
             var result = TestGame.PlayAt(new Point(1, 1));
 
@@ -134,14 +136,14 @@ namespace Minesweeper.Tests
         public void Win()
         {
             // Plant 8 bombs
-            TestGame.GameBoard.Markers[0][0].isBomb = true;
-            TestGame.GameBoard.Markers[0][1].isBomb = true;
-            TestGame.GameBoard.Markers[0][2].isBomb = true;
-            TestGame.GameBoard.Markers[1][0].isBomb = true;
-            TestGame.GameBoard.Markers[1][2].isBomb = true;
-            TestGame.GameBoard.Markers[2][0].isBomb = true;
-            TestGame.GameBoard.Markers[2][1].isBomb = true;
-            TestGame.GameBoard.Markers[2][2].isBomb = true;
+            TestGame.GameBoard[0, 0].isBomb = true;
+            TestGame.GameBoard[1, 0].isBomb = true;
+            TestGame.GameBoard[2, 0].isBomb = true;
+            TestGame.GameBoard[0, 1].isBomb = true;
+            TestGame.GameBoard[2, 1].isBomb = true;
+            TestGame.GameBoard[0, 2].isBomb = true;
+            TestGame.GameBoard[1, 2].isBomb = true;
+            TestGame.GameBoard[2, 2].isBomb = true;
 
             // Empty the field below the 8 bombs
             var result = TestGame.PlayAt(new Point(1, 4));
@@ -158,7 +160,7 @@ namespace Minesweeper.Tests
         {
             var num_bombs = SizeCols * SizeRows / 2;
             var grid = new Game(new Size(SizeCols, SizeRows), num_bombs);
-            var actual_bombs = grid.GameBoard.Markers.Aggregate(0,(total, row) => total + row.Where(item => item.isBomb).Count());
+            var actual_bombs = grid.GameBoard.Dimensions.GetEnumerator().Where(p => grid.GameBoard[p].isBomb).Count();
 
             Assert.AreEqual(num_bombs, actual_bombs);
         }
@@ -167,21 +169,21 @@ namespace Minesweeper.Tests
         public void ClearMultipleAtOnce()
         {
             // Plant bombs around an empty space
-            TestGame.GameBoard.Markers[0][0].isBomb = true;
-            TestGame.GameBoard.Markers[0][1].isBomb = true;
-            TestGame.GameBoard.Markers[0][2].isBomb = true;
-            TestGame.GameBoard.Markers[1][0].isBomb = true;
-            TestGame.GameBoard.Markers[2][0].isBomb = true;
-            TestGame.GameBoard.Markers[3][0].isBomb = true;
-            TestGame.GameBoard.Markers[4][0].isBomb = true;
-            TestGame.GameBoard.Markers[4][1].isBomb = true;
-            TestGame.GameBoard.Markers[4][2].isBomb = true;
+            TestGame.GameBoard[0,0].isBomb = true;
+            TestGame.GameBoard[1,0].isBomb = true;
+            TestGame.GameBoard[2,0].isBomb = true;
+            TestGame.GameBoard[0,1].isBomb = true;
+            TestGame.GameBoard[0,2].isBomb = true;
+            TestGame.GameBoard[0,3].isBomb = true;
+            TestGame.GameBoard[0,4].isBomb = true;
+            TestGame.GameBoard[1,4].isBomb = true;
+            TestGame.GameBoard[2,4].isBomb = true;
 
             // Play in the empty space
             var result = TestGame.PlayAt(new Point(2, 2));
 
             // Check that a neighboring space is open
-            var actual = TestGame.GameBoard.Markers[3][1].isShowing;
+            var actual = TestGame.GameBoard[1,3].isShowing;
             Assert.AreEqual(true, actual);
         }
     }
