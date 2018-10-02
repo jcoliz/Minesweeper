@@ -128,9 +128,7 @@ namespace Minesweeper.Logic
         private int CountBombsNear(Point center)
         {
             // Check in the area immediately surrounding the center (1 away in each direction)
-            var nearby = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
-
-            // Ensure the checking area stays within the game board
+            var nearby = center.Inflate(new Size(1, 1));
             nearby.Intersect(GameBoard.Dimensions);
 
             // Count up the number of bombs within the checking area
@@ -140,9 +138,7 @@ namespace Minesweeper.Logic
         private void PlayAllNear(Point center)
         {
             // play the area immediately surrounding the center (1 away in each direction)
-            var nearby = new Rectangle(center + new Size(-1, -1), new Size(3, 3));
-
-            // Ensure the playing area stays within the game board
+            var nearby = center.Inflate(new Size(1, 1));
             nearby.Intersect(GameBoard.Dimensions);
 
             // Play each item where it's not showing
@@ -161,6 +157,13 @@ namespace Minesweeper.Logic
                     yield return new Point(x, y);
                 }
             }
+        }
+
+        public static Rectangle Inflate(this Point p, Size s)
+        {
+            var result = new Rectangle(p, new Size(1, 1));
+            result.Inflate(s);
+            return result;
         }
     }
 }
