@@ -131,7 +131,7 @@ namespace Minesweeper.Logic
             var nearby = center.Inflate(new Size(1, 1));
             nearby.Intersect(GameBoard.Dimensions);
 
-            // Count up the number of bombs within the checking area
+            // Count up the number of bombs nearby
             return nearby.GetEnumerator().Where(p => GameBoard[p].isBomb).Count();
         }
 
@@ -141,7 +141,7 @@ namespace Minesweeper.Logic
             var nearby = center.Inflate(new Size(1, 1));
             nearby.Intersect(GameBoard.Dimensions);
 
-            // Play each item where it's not showing
+            // Play each nearby item where it's not showing
             nearby.GetEnumerator().Where(p => !GameBoard[p].isShowing).ToList().ForEach(p => PlayAt(p));
         }
         #endregion
