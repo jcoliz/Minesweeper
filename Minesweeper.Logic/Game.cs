@@ -122,7 +122,7 @@ namespace Minesweeper.Logic
         private bool isVictoryConditionMet()
         {
             // Victory is met when every square is either showing or has a bomb
-            return 0 == GetRectangleEnumerator(GameBoard.Dimensions).Select(p=>GameBoard[p]).Where(m => !m.isShowing && !m.isBomb).Count();
+            return 0 == GameBoard.Dimensions.GetEnumerator().Select(p=>GameBoard[p]).Where(m => !m.isShowing && !m.isBomb).Count();
         }
 
         private int CountBombsNear(Point center)
@@ -134,7 +134,7 @@ namespace Minesweeper.Logic
             nearby.Intersect(GameBoard.Dimensions);
 
             // Count up the number of bombs within the checking area
-            return GetRectangleEnumerator(nearby).Where(p => GameBoard[p].isBomb).Count();
+            return nearby.GetEnumerator().Where(p => GameBoard[p].isBomb).Count();
         }
 
         private void PlayAllNear(Point center)
@@ -144,17 +144,15 @@ namespace Minesweeper.Logic
 
             // Ensure the playing area stays within the game board
             nearby.Intersect(GameBoard.Dimensions);
-            
-            // Play each item where it's not showing
-            GetRectangleEnumerator(nearby).Where(p => !GameBoard[p].isShowing).ToList().ForEach(p => PlayAt(p));
-        }
 
-        /// <summary>
-        /// General way to iterate through all the points in a rectangle
-        /// </summary>
-        /// <param name="r"></param>
-        /// <returns>Enumerator to iterate over points</returns>
-        private static IEnumerable<Point> GetRectangleEnumerator(Rectangle r)
+            // Play each item where it's not showing
+            nearby.GetEnumerator().Where(p => !GameBoard[p].isShowing).ToList().ForEach(p => PlayAt(p));
+        }
+        #endregion
+    }
+    public static class Extensions
+    {
+        public static IEnumerable<Point> GetEnumerator(this Rectangle r)
         {
             for (int x = r.X; x < r.Right; x++)
             {
@@ -164,6 +162,5 @@ namespace Minesweeper.Logic
                 }
             }
         }
-        #endregion
     }
 }
