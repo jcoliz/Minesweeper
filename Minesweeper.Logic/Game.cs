@@ -25,10 +25,9 @@ namespace Minesweeper.Logic
 
         #region Public Methods
         /// <summary>
-        /// Consntruct a new marker grid
+        /// Begin a new game
         /// </summary>
-        /// <param name="numcols">How many columns</param>
-        /// <param name="numrows_optional">How many rows, or leave out for 'same as numcols'</param>
+        /// <param name="boardsize">size of the board</param>
         /// <param name="numbombs_optional">How many bombs, or leave out for 'same as numcols'</param>
         public Game(Size boardsize, int? numbombs_optional = null)
         {
